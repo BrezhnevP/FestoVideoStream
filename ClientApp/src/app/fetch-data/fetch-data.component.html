@@ -1,0 +1,22 @@
+<h1>Weather forecast</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+<p *ngIf="!devices"><em>Loading...</em></p>
+
+<table class='table' *ngIf="devices">
+  <thead>
+    <tr>
+      <th>IP Address</th>
+      <th>Name</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let device of devices">
+      <td>{{ device.ipAddress }}</td>
+      <td>{{ device.name }}</td>
+      <td>{{ device.status ? "Avaliable" : "Unavaliable" }}</td>
+    </tr>
+  </tbody>
+</table>
