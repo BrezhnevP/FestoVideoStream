@@ -1,3 +1,5 @@
+using System;
+
 namespace FestoVideoStream.Controllers
 {
     using System.Collections.Generic;
@@ -63,7 +65,7 @@ namespace FestoVideoStream.Controllers
             /// <summary>
             /// The access status.
             /// </summary>
-            public bool Status => true;
+            public bool Status => new Random().Next(100) >= 50;
         }
     }
 }
