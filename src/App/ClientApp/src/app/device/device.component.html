@@ -1,22 +1,8 @@
-<h1>Devices</h1>
 
 <p *ngIf="!device"><em>Loading...</em></p>
 
+<h1>{{ device.name }}</h1>
 
-
-<table class='table' *ngIf="devices">
-  <thead>
-    <tr>
-      <th>IP Address</th>
-      <th>Name</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let device of devices" >
-      <td>{{ device.ipAddress }}</td>
-      <td>{{ device.name }}</td>
-      <td><span class="glyphicon {{device.status ? 'glyphicon-ok' : 'glyphicon-remove'}}"></span></td>
-    </tr>
-  </tbody>
-</table>
+<p>ID: {{ device.id }}</p>
+<p>IP address: {{ device.ipAddress }}</p>
+<p>Status: {{ device.status }}</p>

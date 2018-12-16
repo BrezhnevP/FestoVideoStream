@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FestoVideoStream.Controllers
 {
@@ -12,24 +13,36 @@ namespace FestoVideoStream.Controllers
     /// <summary>
     /// The devices data controller.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/Devices")]
     public class DevicesDataController : Controller
     {
-        private readonly IEnumerable<Device> _devices = Enumerable.Range(1, new Random().Next(3, 10)).Select(x => new Device
+        private readonly IEnumerable<Device> _devices = new List<Device>
         {
-            Id = Guid.NewGuid(),
-            IpAddress = IPAddress.Any.ToString(),
-            Name = $"Device ¹{x}"
-        });
+            new Device{
+                Id = new Guid("e6942940-f619-4a71-8794-c72896de2c01"),
+                IpAddress = IPAddress.Any.ToString(),
+                Name = $"Device ¹ 1"
+            },
+            new Device{
+                Id = new Guid("67cccb87-467c-49f9-9b4f-79698e1edc83"),
+                IpAddress = IPAddress.Any.ToString(),
+                Name = $"Device ¹ 2"
+            },
+            new Device{
+                Id = new Guid("c2c663bf-3ffc-4326-afd7-880d4b25f8fc"),
+                IpAddress = IPAddress.Any.ToString(),
+                Name = $"Device ¹ 3"
+            },
+        };
 
-        [HttpGet("[action]")]
+        [HttpGet]
         public IEnumerable<Device> GetDevices()
         {
             return _devices;
         }
 
-        [HttpGet("[action]")]
-        public Device GetDeviceById(Guid id)
+        [HttpGet("{id}")]
+        public Device GetDeviceById([FromRoute] Guid id)
         {
             return _devices.FirstOrDefault(x => x.Id.Equals(id));
         }
