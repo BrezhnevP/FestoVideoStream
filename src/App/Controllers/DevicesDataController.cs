@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Net;
 
 namespace FestoVideoStream.Controllers
 {
@@ -13,38 +15,23 @@ namespace FestoVideoStream.Controllers
     [Route("api/[controller]")]
     public class DevicesDataController : Controller
     {
-        /// <summary>
-        /// The devices.
-        /// </summary>
-        private static readonly List<Device> Devices = new List<Device>
-                                                           {
-                                                               new Device
-                                                                   {
-                                                                       IpAddress = "255.255.255.255",
-                                                                       Name = "Device 1"
-                                                                   },
-                                                               new Device
-                                                                   {
-                                                                       IpAddress = "255.255.255.255",
-                                                                       Name = "Device 2"
-                                                                   },
-                                                               new Device
-                                                                   {
-                                                                       IpAddress = "255.255.255.255",
-                                                                       Name = "Device 3"
-                                                                   }
-                                                           };
+        private readonly IEnumerable<Device> _devices = Enumerable.Range(1, new Random().Next(3, 10)).Select(x => new Device
+        {
+            Id = Guid.NewGuid(),
+            IpAddress = IPAddress.Any.ToString(),
+            Name = $"Device ¹{x}"
+        });
 
-        /// <summary>
-        /// The get devices.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="IEnumerable"/>.
-        /// </returns>
         [HttpGet("[action]")]
         public IEnumerable<Device> GetDevices()
         {
-            return Devices;
+            return _devices;
+        }
+
+        [HttpGet("[action]")]
+        public Device GetDeviceById(Guid id)
+        {
+            return _devices.FirstOrDefault(x => x.Id.Equals(id));
         }
 
         /// <summary>
@@ -52,6 +39,8 @@ namespace FestoVideoStream.Controllers
         /// </summary>
         public class Device
         {
+            public Guid Id { get; set; }
+
             /// <summary>
             /// The ip address.
             /// </summary>
