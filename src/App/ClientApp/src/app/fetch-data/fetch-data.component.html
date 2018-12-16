@@ -1,6 +1,4 @@
-<h1>Weather forecast</h1>
-
-<p>This component demonstrates fetching data from the server.</p>
+<h1>Devices</h1>
 
 <p *ngIf="!devices"><em>Loading...</em></p>
 
@@ -13,10 +11,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let device of devices">
+    <tr *ngFor="let device of devices" onclick="">
       <td>{{ device.ipAddress }}</td>
       <td>{{ device.name }}</td>
-      <td>{{ device.status ? "Avaliable" : "Unavaliable" }}</td>
+      <td><span class="glyphicon {{device.status ? 'glyphicon-ok' : 'glyphicon-remove'}}"></span></td>
     </tr>
   </tbody>
 </table>

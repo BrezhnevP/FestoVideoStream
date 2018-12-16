@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
+import { IDevice } from '../interfaces/idevice.type';
 
 @Component({
   selector: 'app-fetch-data',
@@ -13,10 +14,4 @@ export class FetchDataComponent {
       this.devices = result;
     }, error => console.error(error));
   }
-}
-
-interface IDevice {
-  ipAddress: string;
-  name: string;
-  status: boolean;
 }
