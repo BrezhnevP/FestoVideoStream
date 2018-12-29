@@ -1,20 +1,17 @@
 <h1>Devices</h1>
 
-<p *ngIf="!devices"><em>Loadingdsa...</em></p>
+<p *ngIf="!device"><em>Loading...</em></p>
 
 <table class='table' *ngIf="devices">
   <thead>
     <tr>
-      <th>ID</th>
       <th>IP Address</th>
       <th>Name</th>
       <th>Status</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let device of devices">
-      <td><a href="/devices/{{ device.id }}">{{ device.id }}</a></td>
-      <td>{{ device.ipAddress }}</td>
+    <tr *ngFor="let device of devices" >
       <td>{{ device.ipAddress }}</td>
       <td>{{ device.name }}</td>
       <td><span class="glyphicon {{device.status ? 'glyphicon-ok' : 'glyphicon-remove'}}"></span></td>

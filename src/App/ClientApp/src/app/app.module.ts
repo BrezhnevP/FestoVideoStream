@@ -7,16 +7,14 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { FetchDataComponent } from './devices/devices.component';
-import { DeviceComponent } from './device/device.component';
+import { DeviceListComponent } from './device-list/device-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    FetchDataComponent,
-    DeviceComponent
+    DeviceListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -24,8 +22,7 @@ import { DeviceComponent } from './device/device.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'devices', component: FetchDataComponent },
-      { path: 'devices/:id', component: DeviceComponent }
+      { path: 'device-list', component: DeviceListComponent },
     ])
   ],
   providers: [],
