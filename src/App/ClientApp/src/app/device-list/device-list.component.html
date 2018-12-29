@@ -1,8 +1,6 @@
 <h1>Devices</h1>
 
-<p *ngIf="!device"><em>Loading...</em></p>
-
-
+<p *ngIf="!devices"><em>Loading...</em></p>
 
 <table class='table' *ngIf="devices">
   <thead>
@@ -13,10 +11,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let device of devices" >
+    <tr *ngFor="let device of devices" onclick="">
       <td>{{ device.ipAddress }}</td>
       <td>{{ device.name }}</td>
-      <td><span class="glyphicon {{device.status ? 'glyphicon-ok' : 'glyphicon-remove'}}"></span></td>
+      <td><span class="fas {{device.status ? 'fa-check-circle' : 'fa-times-circle'}}"></span></td>
     </tr>
   </tbody>
 </table>
