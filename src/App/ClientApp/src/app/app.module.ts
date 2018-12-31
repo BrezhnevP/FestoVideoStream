@@ -4,17 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
-import { AppComponent } from './app.component';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { DeviceListComponent } from './device-list/device-list.component';
+import { AppComponent } from './components/app.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { HomeComponent } from './components/home/home.component';
+import { DeviceListComponent } from './components/device-list/device-list.component';
+import { DeviceDetailsComponent } from './components/device-details/device-details.component';
+import { AddDeviceComponent } from './components/add-device/add-device.component';
+
+import { DeviceDataService } from './services/device.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    DeviceListComponent
+    DeviceListComponent,
+    DeviceDetailsComponent,
+    AddDeviceComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -22,10 +28,12 @@ import { DeviceListComponent } from './device-list/device-list.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'device-list', component: DeviceListComponent },
+      { path: 'devices', component: DeviceListComponent },
+      { path: 'devices/:id', component: DeviceDetailsComponent },
+      { path: 'devices/add', component: AddDeviceComponent }
     ])
   ],
-  providers: [],
+  providers: [DeviceDataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,30 @@
+<h1>Devices</h1>
+
+<p *ngIf="!devices"><em>Loading...</em></p>
+
+<a [routerLink]="['/devices/add']">Add Device</a>
+
+<table class='table' *ngIf="devices">
+  <thead>
+    <tr>
+      <th>IP Address</th>
+      <th>Name</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let device of devices" onclick="">
+      <td>{{ device.ipAddress }}</td>
+      <td>{{ device.name }}</td>
+      <td>
+        <span class="fas {{device.status ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
+      </td>
+      <td>
+        <a [routerLink]="['/devices/', device.id]">Details</a> |
+        <a [routerLink]="['/devices/edit', device.id]">Edit</a> |
+        <a [routerLink]="" (click)="deleteDevice(device)">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>

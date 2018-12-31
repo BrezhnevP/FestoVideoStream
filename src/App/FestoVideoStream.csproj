@@ -35,10 +35,15 @@
 
   <ItemGroup>
     <None Remove="ClientApp\package.json~RF69a49082.TMP" />
+    <None Remove="ClientApp\src\app\services\device.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\services\device.service.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

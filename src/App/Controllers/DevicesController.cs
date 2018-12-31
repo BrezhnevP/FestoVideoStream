@@ -23,7 +23,7 @@ namespace FestoVideoStream.Controllers
 
         // GET: api/Devices
         [HttpGet]
-        public IEnumerable<Device> GetDevice()
+        public IEnumerable<Device> GetDevices()
         {
             return _context.Devices;
         }
@@ -90,6 +90,8 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            device.Id = new Guid();
 
             _context.Devices.Add(device);
             await _context.SaveChangesAsync();
