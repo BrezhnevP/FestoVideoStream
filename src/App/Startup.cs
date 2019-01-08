@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using FestoVideoStream.Models;
+using FestoVideoStream.Services;
 
 namespace FestoVideoStream
 {
@@ -30,6 +31,8 @@ namespace FestoVideoStream
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.AddScoped<HttpVideoStreamService>();
 
             services.AddDbContext<DevicesContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DevicesContext")));

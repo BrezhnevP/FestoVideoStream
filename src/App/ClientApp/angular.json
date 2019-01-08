@@ -22,9 +22,13 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/videogular2/fonts/videogular.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/dashjs/dist/dash.all.min.js",
+              "node_modules/hls.js/dist/hls.min.js"
+            ]
           },
           "configurations": {
             "production": {

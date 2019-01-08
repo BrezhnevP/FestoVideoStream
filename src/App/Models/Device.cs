@@ -23,6 +23,5 @@ namespace FestoVideoStream.Models
         /// The status.
         /// </summary>
         public bool Status { get; set; }
-        
     }
 }
