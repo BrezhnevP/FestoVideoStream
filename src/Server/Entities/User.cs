@@ -1,18 +1,13 @@
 ﻿using System;
 
-namespace FestoVideoStream.Models
+namespace FestoVideoStream.Entities
 {
     /// <summary>
     /// The device.
     /// </summary>
-    public class Device
+    public class User
     {
         public Guid Id { get; set; }
-
-        /// <summary>
-        /// The ip address.
-        /// </summary>
-        public string IpAddress { get; set; }
 
         /// <summary>
         /// The name.
@@ -20,8 +15,8 @@ namespace FestoVideoStream.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// The status.
+        /// The name.
         /// </summary>
-        public bool Status { get; set; }
+        public string Password { get; set; }
     }
 }

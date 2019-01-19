@@ -1,12 +1,12 @@
 ﻿using FestoVideoStream.Data;
-using FestoVideoStream.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FestoVideoStream.Entities;
 
 namespace FestoVideoStream.Controllers
 {
@@ -23,9 +23,14 @@ namespace FestoVideoStream.Controllers
 
         // GET: api/Devices
         [HttpGet]
-        public IEnumerable<Device> GetDevices()
+        public IActionResult GetDevices()
         {
-            return _context.Devices;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok(_context.Devices);
         }
 
         // GET: api/Devices/5
@@ -48,7 +53,7 @@ namespace FestoVideoStream.Controllers
         }
 
         // PUT: api/Devices/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutDevice([FromRoute] Guid id, [FromBody] Device device)
         {
             if (!ModelState.IsValid)
@@ -83,7 +88,7 @@ namespace FestoVideoStream.Controllers
         }
 
         // POST: api/Devices
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> PostDevice([FromBody] Device device)
         {
             if (!ModelState.IsValid)
@@ -100,7 +105,7 @@ namespace FestoVideoStream.Controllers
         }
 
         // DELETE: api/Devices/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteDevice([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)

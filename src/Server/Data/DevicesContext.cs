@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FestoVideoStream.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FestoVideoStream.Data
 {
@@ -9,6 +10,6 @@ namespace FestoVideoStream.Data
         {
         }
 
-        public DbSet<FestoVideoStream.Models.Device> Devices { get; set; }
+        public DbSet<Device> Devices { get; set; }
     }
 }
