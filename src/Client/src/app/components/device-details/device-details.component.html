@@ -1,0 +1,8 @@
+<p *ngIf="!device"><em>Loading...</em></p>
+
+<h1 *ngIf="device">{{device.name}}</h1>
+
+<p *ngIf="device">IP address: {{device.ipAddress}}</p>
+<p *ngIf="device">Status: {{device.status ? 'Available' : 'Not available'}}</p>
+
+<app-device-video></app-device-video>
