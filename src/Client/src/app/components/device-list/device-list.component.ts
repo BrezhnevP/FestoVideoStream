@@ -12,7 +12,7 @@ export class DeviceListComponent {
   constructor(private dataService: DeviceDataService) {
     this.dataService.getDevices().subscribe(result => {
       this.devices = result;
-    }, error => console.error(error))
+    }, error => console.error(error));
   }
 
   deleteDevice(device: IDevice) {

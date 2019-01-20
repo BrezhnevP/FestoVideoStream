@@ -3,15 +3,17 @@ using System;
 using FestoVideoStream.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FestoVideoStream.Migrations
 {
     [DbContext(typeof(DevicesContext))]
-    partial class DevicesContextModelSnapshot : ModelSnapshot
+    [Migration("20190120135313_RemovedStatus")]
+    partial class RemovedStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,13 +26,9 @@ namespace FestoVideoStream.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Config");
+                    b.Property<string>("IpAddress");
 
-                    b.Property<string>("IpAddress")
-                        .IsRequired();
-
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
                     b.HasKey("Id");
 

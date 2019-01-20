@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using FestoVideoStream.Services;
 
 namespace FestoVideoStream
 {
@@ -43,7 +44,9 @@ namespace FestoVideoStream
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<DevicesContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DevicesContext")));
+                    options.UseNpgsql(Configuration.GetConnectionString("DevicesContext")));
+
+            services.AddScoped<DevicesService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

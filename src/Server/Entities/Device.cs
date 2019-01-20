@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
+using FestoVideoStream.Attributes;
 
 namespace FestoVideoStream.Entities
 {
@@ -12,16 +15,23 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The ip address.
         /// </summary>
+        [Required, IpAddress]
         public string IpAddress { get; set; }
 
         /// <summary>
         /// The name.
         /// </summary>
+        [Required]
         public string Name { get; set; }
 
         /// <summary>
-        /// The status.
+        /// The configuration string of the device
+        /// </summary>  
+        public string Config { get; set; }
+
+        /// <summary>
+        /// The current status of the device
         /// </summary>
-        public bool Status { get; set; }
+        public bool Status => new Random().Next(100) >= 50;
     }
 }

@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +16,8 @@
     <Compile Remove="Migrations\20181229190109_Initial.Designer.cs" />
     <Compile Remove="Migrations\20181229204640_Initial.cs" />
     <Compile Remove="Migrations\20181229204640_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20190120154426_AddedConfigColumn.cs" />
+    <Compile Remove="Migrations\20190120154426_AddedConfigColumn.Designer.cs" />
   </ItemGroup>
 
 </Project>

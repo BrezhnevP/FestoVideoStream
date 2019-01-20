@@ -1,12 +1,8 @@
-﻿using FestoVideoStream.Data;
-using Microsoft.AspNetCore.Authorization;
+﻿using FestoVideoStream.Dto;
+using FestoVideoStream.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using FestoVideoStream.Entities;
 
 namespace FestoVideoStream.Controllers
 {
@@ -14,11 +10,11 @@ namespace FestoVideoStream.Controllers
     [ApiController]
     public class DevicesController : ControllerBase
     {
-        private readonly DevicesContext _context;
+        private readonly DevicesService _service;
 
-        public DevicesController(DevicesContext context)
+        public DevicesController(DevicesService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // GET: api/Devices
@@ -29,8 +25,9 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var devices = _service.GetDevices();
 
-            return Ok(_context.Devices);
+            return Ok(devices);
         }
 
         // GET: api/Devices/5
@@ -42,7 +39,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var device = await _context.Devices.FindAsync(id);
+            var device = await _service.GetDevice(id);
 
             if (device == null)
             {
@@ -53,8 +50,8 @@ namespace FestoVideoStream.Controllers
         }
 
         // PUT: api/Devices/5
-        [HttpPut("{id}"), Authorize]
-        public async Task<IActionResult> PutDevice([FromRoute] Guid id, [FromBody] Device device)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDevice([FromRoute] Guid id, [FromBody] DeviceDetailsDto device)
         {
             if (!ModelState.IsValid)
             {
@@ -66,68 +63,45 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(device).State = EntityState.Modified;
+            var result = await _service.ModifyDevice(id, device);
 
-            try
+            if (!result)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DeviceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                NotFound();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Devices
-        [HttpPost, Authorize]
-        public async Task<IActionResult> PostDevice([FromBody] Device device)
+        [HttpPost]
+        public async Task<IActionResult> PostDevice([FromBody] DeviceDetailsDto device)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var id = await _service.CreateDevice(device);
+            device.Id = id;
 
-            device.Id = new Guid();
-
-            _context.Devices.Add(device);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetDevice", new { id = device.Id }, device);
+            return CreatedAtAction("GetDevice", new { id }, device);
         }
 
         // DELETE: api/Devices/5
-        [HttpDelete("{id}"), Authorize]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDevice([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var device = await _context.Devices.FindAsync(id);
-            if (device == null)
+            var result = await _service.DeleteDevice(id);
+            if (!result)
             {
                 return NotFound();
             }
 
-            _context.Devices.Remove(device);
-            await _context.SaveChangesAsync();
-
-            return Ok(device);
-        }
-
-        private bool DeviceExists(Guid id)
-        {
-            return _context.Devices.Any(e => e.Id == id);
+            return Ok();
         }
     }
 }

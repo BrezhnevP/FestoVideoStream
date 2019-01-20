@@ -7,16 +7,16 @@ export class DeviceDataService {
 
   deviceUrl: string;
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    this.deviceUrl = baseUrl + 'api/Devices/';
+  constructor(private http: HttpClient, @Inject('API_URL') apiUrl: string) {
+    this.deviceUrl = apiUrl + '/devices/';
   }
 
   getDevices() {
     return this.http.get<IDevice[]>(this.deviceUrl);
-   }
+  }
 
   getDevice(id: string) {
-   return this.http.get<IDevice>(this.deviceUrl + id);
+    return this.http.get<IDevice>(this.deviceUrl + id);
   }
 
   addDevice(device: IDevice) {
