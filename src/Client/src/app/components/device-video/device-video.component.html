@@ -8,12 +8,6 @@
     <vg-fullscreen></vg-fullscreen>
   </vg-controls>
 
-  <video #media
-         [vgMedia]="media"
-         [vgDash]="currentStream.source"
-         [vgHls]="currentStream.source"
-         id="streamVideo"
-         type="video/mp4"
-         crossorigin>
+  <video #media [vgMedia]="media" [vgDash]="currentStream.source" id="streamVideo" type="video/mp4" crossorigin>
   </video>
 </vg-player>

@@ -51,10 +51,17 @@ namespace FestoVideoStream.Services
         {
             var device = new Device
             {
+                Id = Guid.NewGuid(),
                 Name = deviceDto.Name,
                 IpAddress = deviceDto.IpAddress,
                 Config = deviceDto.Config
             };
+
+            if (device.Config == null)
+            {
+                device.Config = GetDefaultConfig(device.Id);
+            }
+
             _context.Devices.Add(device);
             await _context.SaveChangesAsync();
 
@@ -102,6 +109,16 @@ namespace FestoVideoStream.Services
         private bool DeviceExists(Guid id)
         {
             return _context.Devices.Any(e => e.Id == id);
+        }
+
+        private static string GetDefaultConfig(Guid id)
+        {
+            return
+                "ffmpeg -f x11grab -s 1920x1200 " +
+                "-framerate 15 -i :0.0 -c:v libx264 " +
+                "-preset fast -pix_fmt yuv420p -s 1280x800 " +
+                "-threads 0 -f flv " +
+                $"\"rtmp://localhost/streamingapp/{id}\"";
         }
     }
 }

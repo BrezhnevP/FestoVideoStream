@@ -23,11 +23,11 @@ export class DeviceVideoComponent implements OnInit {
   currentStream: IMediaStream;
   api: VgAPI;
 
-  streams: IMediaStream = 
+  streams: IMediaStream =
     {
       type: 'dash',
       label: 'DASH: Live Streaming',
-      source: 'https://irtdashreference-i.akamaihd.net/dash/live/901161/bfs/manifestBR.mpd'
+      source: 'http://192.168.0.29:8080/dash/mystream.mpd'
     };
 
   constructor() {

@@ -47,6 +47,8 @@ namespace FestoVideoStream
                     options.UseNpgsql(Configuration.GetConnectionString("DevicesContext")));
 
             services.AddScoped<DevicesService>();
+
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,11 +62,9 @@ namespace FestoVideoStream
             {
                 app.UseHsts();
             }
-
+            app.UseCors(builder => builder.AllowAnyOrigin());
             app.UseHttpsRedirection();
-
             app.UseMvc();
-
             app.UseAuthentication();
         }
     }

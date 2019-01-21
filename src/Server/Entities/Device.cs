@@ -29,9 +29,10 @@ namespace FestoVideoStream.Entities
         /// </summary>  
         public string Config { get; set; }
 
+        //TODO
         /// <summary>
         /// The current status of the device
         /// </summary>
-        public bool Status => new Random().Next(100) >= 50;
+        public bool Status => true; //new Ping().Send(IPAddress.Parse(this.IpAddress))?.Status == IPStatus.Success;
     }
 }
