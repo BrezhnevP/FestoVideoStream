@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { BitrateOption, VgAPI } from 'videogular2/core';
-import { Subscription, timer } from "rxjs";
-import { IDRMLicenseServer } from 'videogular2/streaming';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { VgAPI } from 'videogular2/core';
 import { VgDASH } from 'videogular2/src/streaming/vg-dash/vg-dash';
 import { VgHLS } from 'videogular2/src/streaming/vg-hls/vg-hls';
 
@@ -27,7 +25,7 @@ export class DeviceVideoComponent implements OnInit {
     {
       type: 'dash',
       label: 'DASH: Live Streaming',
-      source: 'http://192.168.0.29:8080/dash/mystream.mpd'
+      source: 'http://192.168.0.29:8080/dash/myapp.mpd'
     };
 
   constructor() {
