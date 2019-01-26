@@ -1,7 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
 import { VgAPI } from 'videogular2/core';
 import { VgDASH } from 'videogular2/src/streaming/vg-dash/vg-dash';
 import { VgHLS } from 'videogular2/src/streaming/vg-hls/vg-hls';
+import { HttpClient } from '@angular/common/http';
+import { stripSummaryForJitNameSuffix } from '@angular/compiler/src/aot/util';
 
 export interface IMediaStream {
   type: 'dash';
@@ -11,24 +13,19 @@ export interface IMediaStream {
 
 @Component({
   selector: 'app-device-video',
-  templateUrl: './device-video.component.html',
-  styleUrls: ['./device-video.component.css']
+  templateUrl: './device-video.component.html'
 })
 export class DeviceVideoComponent implements OnInit {
   @ViewChild(VgDASH) vgDash: VgDASH;
   @ViewChild(VgHLS) vgHls: VgHLS;
 
-  currentStream: IMediaStream;
+  @Input() deviceId: string;
+  streamUrl: string;
+  currentStream: string;
   api: VgAPI;
 
-  streams: IMediaStream =
-    {
-      type: 'dash',
-      label: 'DASH: Live Streaming',
-      source: 'http://192.168.0.29:8080/dash/myapp.mpd'
-    };
-
-  constructor() {
+  constructor(private http: HttpClient, @Inject('API_URL') apiUrl: string) {
+    this.streamUrl = apiUrl + '/stream/dash/';
   }
 
   onPlayerReady(api: VgAPI) {
@@ -36,6 +33,8 @@ export class DeviceVideoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.currentStream = this.streams;
+    this.http.get(this.streamUrl + this.deviceId, { responseType: 'text' }).subscribe(result => {
+      this.currentStream = result;
+    }, error => console.error(error));
   }
 }

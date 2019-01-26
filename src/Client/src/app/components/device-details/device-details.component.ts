@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { DeviceDataService } from '../../services/device.service';
-import { IDevice } from '../../models/idevice.type';
+import { IDeviceDetails } from '../../models/idevicedetails.type';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -8,11 +8,11 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './device-details.component.html'
 })
 export class DeviceDetailsComponent {
-  public device: IDevice;
+  public device: IDeviceDetails;
 
   constructor(private dataService: DeviceDataService, private route: ActivatedRoute) {
-    this.dataService.getDevice(this.route.snapshot.params["id"]).subscribe(result => {
+    this.dataService.getDevice(this.route.snapshot.params['id']).subscribe(result => {
       this.device = result;
-    }, error => console.error(error))
+    }, error => console.error(error));
   }
 }

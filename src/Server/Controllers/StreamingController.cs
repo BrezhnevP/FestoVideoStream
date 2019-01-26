@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Net;
 
 namespace FestoVideoStream.Controllers
 {
@@ -16,15 +16,36 @@ namespace FestoVideoStream.Controllers
             _configuration = configuration;
         }
 
-        // GET: api/Stream/5
-        [HttpGet("{id}")]
-        public IActionResult GetManifestPath([FromRoute]Guid id)
+        // GET: api/stream/dash/5
+        [HttpGet("{type}/{id}")]
+        public IActionResult GetManifestPath([FromRoute] string type, [FromRoute]Guid id)
         {
-            var streamManifestPath = _configuration.GetValue<string>("ServerPath");
-
-            if (System.IO.File.Exists($"{streamManifestPath}/{id}.m3u8"))
-                return Ok($"{streamManifestPath}/{id}.m3u8");
+            var streamPath = _configuration.GetValue<string>("HttpServerPath");
+            var manifestPath = $"{streamPath}{type}/{id}.{(type == "dash" ? "mpd" : "m3u8")}";
+            
+            if (UrlExists(manifestPath))
+                return Ok(manifestPath);
             return NotFound();
+        }
+
+        private static bool UrlExists(string url)
+        {
+            bool result = true;
+
+            WebRequest webRequest = WebRequest.Create(url);
+            webRequest.Timeout = 1200;
+            webRequest.Method = "HEAD";
+
+            try
+            {
+                webRequest.GetResponse();
+            }
+            catch
+            {
+                result = false;
+            }
+
+            return result;
         }
     }
 }

@@ -2,20 +2,26 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using AutoMapper;
 using FestoVideoStream.Data;
 using FestoVideoStream.Dto;
 using FestoVideoStream.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace FestoVideoStream.Services
 {
     public class DevicesService
     {
         private readonly DevicesContext _context;
+        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public DevicesService(DevicesContext context)
+        public DevicesService(IConfiguration configuration, IMapper mapper, DevicesContext context)
         {
+            _configuration = configuration;
+            _mapper = mapper;
             _context = context;
         }
 
@@ -47,7 +53,7 @@ namespace FestoVideoStream.Services
             return device;
         }
 
-        public async Task<Guid> CreateDevice(DeviceDetailsDto deviceDto)
+        public async Task<DeviceDetailsDto> CreateDevice(DeviceDetailsDto deviceDto)
         {
             var device = new Device
             {
@@ -57,7 +63,7 @@ namespace FestoVideoStream.Services
                 Config = deviceDto.Config
             };
 
-            if (device.Config == null)
+            if (string.IsNullOrWhiteSpace(device.Config))
             {
                 device.Config = GetDefaultConfig(device.Id);
             }
@@ -65,7 +71,7 @@ namespace FestoVideoStream.Services
             _context.Devices.Add(device);
             await _context.SaveChangesAsync();
 
-            return device.Id;
+            return _mapper.Map<DeviceDetailsDto>(device);
         }
 
         public async Task<bool> ModifyDevice(Guid id, DeviceDetailsDto device)
@@ -111,14 +117,16 @@ namespace FestoVideoStream.Services
             return _context.Devices.Any(e => e.Id == id);
         }
 
-        private static string GetDefaultConfig(Guid id)
+        private string GetDefaultConfig(Guid id)
         {
-            return
-                "ffmpeg -f x11grab -s 1920x1200 " +
-                "-framerate 15 -i :0.0 -c:v libx264 " +
-                "-preset fast -pix_fmt yuv420p -s 1280x800 " +
-                "-threads 0 -f flv " +
-                $"\"rtmp://localhost/streamingapp/{id}\"";
+            
+            var configurationString = "ffmpeg -f x11grab -s 1920x1200 " +
+                                      "-framerate 15 -i :0.0 -c:v libx264 " +
+                                      "-preset fast -pix_fmt yuv420p -s 1280x800 " +
+                                      "-threads 0 -f flv " +
+                                      $"\"{_configuration.GetValue<string>("RtmpServerPath")}/dash/{id}\"";
+
+            return configurationString;
         }
     }
 }
