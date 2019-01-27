@@ -2,7 +2,7 @@
 
 <p *ngIf="!devices"><em>Loading...</em></p>
 
-<a [routerLink]="['/devices/add']">Add Device</a>
+<a [routerLink]="['/devices/add']"><button type="button" class="btn btn-primary">Add Device</button></a>
 
 <table class='table' *ngIf="devices">
   <thead>
@@ -14,16 +14,17 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let device of devices" onclick="">
-      <td>{{ device.ipAddress }}</td>
-      <td>{{ device.name }}</td>
+    <tr *ngFor="let device of devices" ng-click="">
+     <td><a class = "cell_link" [routerLink]="['/devices/', device.id]">135.134.54.4.56454</a></td>
+      <td><a class = "cell_link" [routerLink]="['/devices/', device.id]">Portable Camera 1488 </a></td>
       <td>
+        <a class = "cell_link" [routerLink]="['/devices/', device.id]">
         <span class="fas {{device.status ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
+        </a>
       </td>
-      <td>
-        <a [routerLink]="['/devices/', device.id]">Details</a> |
-        <a [routerLink]="['/devices/edit', device.id]">Edit</a> |
-        <a [routerLink]="" (click)="deleteDevice(device)">Delete</a>
+      <td class = "edit_td">
+        <a class ="span_link" [routerLink]="['/devices/edit', device.id]"><button type="button" class="btn btn-success left_button">Edit</button></a>
+        <a [routerLink]="" (click)="deleteDevice(device)"><button type="button" class="btn btn-danger">Delete</button></a>
       </td>
     </tr>
   </tbody>
