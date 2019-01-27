@@ -63,11 +63,11 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var result = await _service.ModifyDevice(id, device);
+            var result = await _service.UpdateDevice(id, device);
 
             if (!result)
             {
-                NotFound();
+                BadRequest();
             }
 
             return Ok();

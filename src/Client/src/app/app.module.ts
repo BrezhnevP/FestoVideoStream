@@ -19,8 +19,10 @@ import { DeviceListComponent } from './components/device-list/device-list.compon
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { DeviceVideoComponent } from './components/device-video/device-video.component';
 import { AddDeviceComponent } from './components/add-device/add-device.component';
+import { EditDeviceComponent } from './components/edit-device/edit-device.component';
 
 import { DeviceDataService } from './services/device.service';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import { DeviceDataService } from './services/device.service';
     DeviceListComponent,
     DeviceDetailsComponent,
     AddDeviceComponent,
-    DeviceVideoComponent
+    DeviceVideoComponent,
+    EditDeviceComponent
   ],
   imports: [
     CommonModule,
@@ -49,7 +52,8 @@ import { DeviceDataService } from './services/device.service';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'devices', component: DeviceListComponent },
       { path: 'devices/details/:id', component: DeviceDetailsComponent },
-      { path: 'devices/add', component: AddDeviceComponent }
+      { path: 'devices/add', component: AddDeviceComponent },
+      { path: 'devices/edit/:id', component: EditDeviceComponent },
     ])
   ],
   providers: [DeviceDataService],

@@ -1,6 +1,6 @@
 <div class="col-md-6 user-container">
-  <h2 class="text-center">Add Device</h2>
-  <form [formGroup]="addForm" (ngSubmit)="onSubmit()">
+  <h2 class="text-center">Edit Device</h2>
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
     <div class="form-group">
       <label for="name">Device Name:</label>
       <input type="text" formControlName="name" placeholder="Name" name="name" class="form-control" id="name">
@@ -8,8 +8,7 @@
 
     <div class="form-group">
       <label for="ipAddress">IP address:</label>
-      <input type="ipAddress" formControlName="ipAddress" placeholder="IP Address" name="ipAddress" class="form-control"
-        id="ipAddress">
+      <input type="text" formControlName="ipAddress" placeholder="IP Address" name="ipAddress" class="form-control" id="ipAddress">
     </div>
 
     <div class="form-group">
@@ -17,6 +16,6 @@
       <input formControlName="config" placeholder="config" name="Configuration" class="form-control" id="config">
     </div>
 
-    <button class="btn btn-success">Create</button>
+    <button class="btn btn-success">Edit</button>
   </form>
 </div>

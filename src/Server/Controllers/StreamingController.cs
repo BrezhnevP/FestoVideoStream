@@ -21,7 +21,7 @@ namespace FestoVideoStream.Controllers
         public IActionResult GetManifestPath([FromRoute] string type, [FromRoute]Guid id)
         {
             var streamPath = _configuration.GetValue<string>("HttpServerPath");
-            var manifestPath = $"{streamPath}{type}/{id}.{(type == "dash" ? "mpd" : "m3u8")}";
+            var manifestPath = $"{streamPath}/{type}/{id}.{(type == "dash" ? "mpd" : "m3u8")}";
             
             if (UrlExists(manifestPath))
                 return Ok(manifestPath);

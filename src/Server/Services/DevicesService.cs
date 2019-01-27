@@ -55,13 +55,11 @@ namespace FestoVideoStream.Services
 
         public async Task<DeviceDetailsDto> CreateDevice(DeviceDetailsDto deviceDto)
         {
-            var device = new Device
-            {
-                Id = Guid.NewGuid(),
-                Name = deviceDto.Name,
-                IpAddress = deviceDto.IpAddress,
-                Config = deviceDto.Config
-            };
+            var device = _mapper.Map<Device>(deviceDto,
+                options => options.AfterMap((source, target) =>
+                {
+                    ((Device) target).Id = Guid.NewGuid();
+                }));
 
             if (string.IsNullOrWhiteSpace(device.Config))
             {
@@ -74,8 +72,9 @@ namespace FestoVideoStream.Services
             return _mapper.Map<DeviceDetailsDto>(device);
         }
 
-        public async Task<bool> ModifyDevice(Guid id, DeviceDetailsDto device)
+        public async Task<bool> UpdateDevice(Guid id, DeviceDetailsDto deviceDto)
         {
+            var device = _mapper.Map<Device>(deviceDto);
 
             _context.Entry(device).State = EntityState.Modified;
 
@@ -122,7 +121,7 @@ namespace FestoVideoStream.Services
             
             var configurationString = "ffmpeg -f x11grab -s 1920x1200 " +
                                       "-framerate 15 -i :0.0 -c:v libx264 " +
-                                      "-preset fast -pix_fmt yuv420p -s 1280x800 " +
+                                      "-preset fast -pix_fmt yuv420p -s 1024x800 " +
                                       "-threads 0 -f flv " +
                                       $"\"{_configuration.GetValue<string>("RtmpServerPath")}/dash/{id}\"";
 

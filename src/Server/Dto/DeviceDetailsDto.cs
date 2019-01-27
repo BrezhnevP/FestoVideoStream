@@ -1,4 +1,5 @@
 ﻿using System;
+using FestoVideoStream.Attributes;
 
 namespace FestoVideoStream.Dto
 {
