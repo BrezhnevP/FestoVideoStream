@@ -4,7 +4,8 @@ import { DeviceDataService } from '../../services/device.service';
 
 @Component({
   selector: 'app-device-list',
-  templateUrl: './device-list.component.html'
+  templateUrl: './device-list.component.html',
+  styleUrls: ['./device-list.component.css']
 })
 export class DeviceListComponent {
   public devices: IDevice[];

@@ -1,0 +1,57 @@
+input {
+  width: 100%;
+}
+h1{
+font-weight: 700;
+}
+li {
+  cursor: pointer;
+}
+
+li.selected {
+  font-weight: bold;
+}
+tbody tr:hover{
+	background-color:rgba(0,0,0,0.1);
+}
+button.btn{
+	margin-bottom: 15px;
+	margin-top: 10px;
+}
+tbody .cell_link{
+	display: block;
+	width: 100%;
+	min-height: 100%;
+	padding-top: 10px;
+	padding-left: 10px;
+	text-decoration: none;
+	color: black;
+}
+td{
+	padding: 0;
+	height: 45px;
+	vertical-align: middle;
+}
+td span{
+	margin-left: 17px;
+}
+td .span_link{
+	margin-left: 20px;
+}
+.edit_td{
+	border-left: 2px solid #dee2e6;
+}
+.edit_td button{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	height: 30px;
+	line-height: 10px;
+}
+.edit_td .left_button{
+	margin-right: 5px;
+}
+
+tbody tr{
+	border-bottom: 2px solid #dee2e6;
+}
+
