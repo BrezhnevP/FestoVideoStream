@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, Inject } from '@angular/core';
 import { IDevice } from '../models/idevice.type';
+import { IDeviceDetails } from '../models/idevicedetails.type';
 
 @Injectable()
 export class DeviceDataService {
@@ -16,11 +17,11 @@ export class DeviceDataService {
   }
 
   getDevice(id: string) {
-    return this.http.get<IDevice>(this.deviceUrl + id);
+    return this.http.get<IDeviceDetails>(this.deviceUrl + id);
   }
 
-  addDevice(device: IDevice) {
-    return this.http.post<IDevice>(this.deviceUrl, device);
+  addDevice(device: IDeviceDetails) {
+    return this.http.post<IDeviceDetails>(this.deviceUrl, device);
   }
 
   editDevice(device: IDevice) {

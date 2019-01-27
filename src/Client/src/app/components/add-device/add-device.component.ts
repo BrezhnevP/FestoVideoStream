@@ -1,18 +1,32 @@
-import { Component } from '@angular/core';
-import { IDevice } from '../../models/idevice.type';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DeviceDataService } from '../../services/device.service';
+import { IDeviceDetails } from '../../models/idevicedetails.type';
 
 @Component({
   selector: 'app-add-device',
   templateUrl: './add-device.component.html'
 })
-export class AddDeviceComponent {
-  public device: IDevice;
+export class AddDeviceComponent implements OnInit {
 
-  constructor(private dataService: DeviceDataService) {
+  public device: IDeviceDetails;
+  addForm: FormGroup;
+
+  constructor(private formBuilder: FormBuilder, private router: Router, private dataService: DeviceDataService) {
   }
 
-  addDevice() {
-    this.dataService.addDevice(this.device).subscribe(() => console.log("Device is added"));
+  ngOnInit() {
+    this.addForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      ipAddress: ['', Validators.required],
+      config: [''],
+    });
+  }
+
+  onSubmit() {
+    this.dataService.addDevice(this.addForm.value).subscribe(data => {
+      this.router.navigate(['devices']);
+    });
   }
 }

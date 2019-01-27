@@ -17,6 +17,11 @@ export class DeviceListComponent {
   }
 
   deleteDevice(device: IDevice) {
-    this.dataService.deleteDevice(device).subscribe(() => console.log("Device is deleted"));;
+    this.dataService.deleteDevice(device).subscribe(() => {
+      console.log('Device is deleted');
+      this.dataService.getDevices().subscribe(result => {
+        this.devices = result;
+      }, error => console.error(error));
+    });
   }
 }

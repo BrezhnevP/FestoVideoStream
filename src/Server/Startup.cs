@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using AutoMapper;
 using FestoVideoStream.Services;
 
 namespace FestoVideoStream
@@ -47,6 +48,17 @@ namespace FestoVideoStream
                     options.UseNpgsql(Configuration.GetConnectionString("DevicesContext")));
 
             services.AddScoped<DevicesService>();
+
+            services.AddCors();
+
+            // Auto Mapper Configurations
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,12 +72,12 @@ namespace FestoVideoStream
             {
                 app.UseHsts();
             }
-
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseHttpsRedirection();
-
             app.UseMvc();
-
             app.UseAuthentication();
+
+
         }
     }
 }

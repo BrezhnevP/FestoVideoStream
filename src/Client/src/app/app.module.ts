@@ -3,13 +3,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from "@angular/common";
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { VgCoreModule } from "videogular2/core";
-import { VgControlsModule } from "videogular2/controls";
-import { VgOverlayPlayModule } from "videogular2/overlay-play";
-import { VgBufferingModule } from "videogular2/buffering";
-import { VgStreamingModule } from "videogular2/streaming";
+import { VgCoreModule } from 'videogular2/core';
+import { VgControlsModule } from 'videogular2/controls';
+import { VgOverlayPlayModule } from 'videogular2/overlay-play';
+import { VgBufferingModule } from 'videogular2/buffering';
+import { VgStreamingModule } from 'videogular2/streaming';
 
 import { AppComponent } from './components/app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
@@ -39,6 +40,7 @@ import { DeviceDataService } from './services/device.service';
     VgOverlayPlayModule,
     VgBufferingModule,
     VgStreamingModule,
+    ReactiveFormsModule,
 
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
@@ -46,7 +48,7 @@ import { DeviceDataService } from './services/device.service';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'devices', component: DeviceListComponent },
-      { path: 'devices/:id', component: DeviceDetailsComponent },
+      { path: 'devices/details/:id', component: DeviceDetailsComponent },
       { path: 'devices/add', component: AddDeviceComponent }
     ])
   ],

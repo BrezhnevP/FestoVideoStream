@@ -75,16 +75,15 @@ namespace FestoVideoStream.Controllers
 
         // POST: api/Devices
         [HttpPost]
-        public async Task<IActionResult> PostDevice([FromBody] DeviceDetailsDto device)
+        public async Task<IActionResult> PostDevice([FromBody] DeviceDetailsDto deviceToCreate)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var id = await _service.CreateDevice(device);
-            device.Id = id;
+            var createdDevice = await _service.CreateDevice(deviceToCreate);
 
-            return CreatedAtAction("GetDevice", new { id }, device);
+            return CreatedAtAction("GetDevice", new { createdDevice.Id }, createdDevice);
         }
 
         // DELETE: api/Devices/5

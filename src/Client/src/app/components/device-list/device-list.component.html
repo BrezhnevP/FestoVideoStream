@@ -2,8 +2,8 @@
 
 <p *ngIf="!devices"><em>Loading...</em></p>
 
+<div *ngIf="devices">
 <a [routerLink]="['/devices/add']"><button type="button" class="btn btn-primary">Add Device</button></a>
-
 <table class='table' *ngIf="devices">
   <thead>
     <tr>
@@ -24,8 +24,9 @@
       </td>
       <td class = "edit_td">
         <a class ="span_link" [routerLink]="['/devices/edit', device.id]"><button type="button" class="btn btn-success left_button">Edit</button></a>
-        <a [routerLink]="" (click)="deleteDevice(device)"><button type="button" class="btn btn-danger">Delete</button></a>
+        <a [routerLink]="['/devices/']" (click)="deleteDevice(device)"><button type="button" class="btn btn-danger">Delete</button></a>
       </td>
     </tr>
   </tbody>
 </table>
+</div>

@@ -26,8 +26,7 @@
               "node_modules/videogular2/fonts/videogular.css"
             ],
             "scripts": [
-              "node_modules/dashjs/dist/dash.all.min.js",
-              "node_modules/hls.js/dist/hls.min.js"
+              "node_modules/dashjs/dist/dash.all.min.js"
             ]
           },
           "configurations": {

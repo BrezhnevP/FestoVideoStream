@@ -1,8 +1,7 @@
-﻿using System;
+﻿using FestoVideoStream.Entities;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
-using FestoVideoStream.Entities;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace FestoVideoStream.Attributes
 {
