@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Net;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace FestoVideoStream.Controllers
 {
@@ -10,42 +14,53 @@ namespace FestoVideoStream.Controllers
     public class StreamController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly StreamService _service;
 
-        public StreamController(IConfiguration configuration)
+        public StreamController(IConfiguration configuration, StreamService service)
         {
             _configuration = configuration;
+            _service = service;
         }
 
         // GET: api/stream/dash/5
-        [HttpGet("{type}/{id}")]
-        public IActionResult GetManifestPath([FromRoute] string type, [FromRoute]Guid id)
+        [HttpGet("dash/{id}")]
+        public IActionResult GetManifestPath([FromRoute]Guid id)
         {
-            var streamPath = _configuration.GetValue<string>("HttpServerPath");
-            var manifestPath = $"{streamPath}/{type}/{id}.{(type == "dash" ? "mpd" : "m3u8")}";
-            
-            if (UrlExists(manifestPath))
+            var manifestPath = _service.GetDashManifest(id);
+            if (manifestPath != null)
                 return Ok(manifestPath);
+            
             return NotFound();
         }
 
-        private static bool UrlExists(string url)
+        // GET: api/stream/dash/5
+        [HttpGet("{id}/frames/{count}")]
+        public IActionResult GetFrames([FromRoute]Guid id, [FromRoute] int count)
         {
-            bool result = true;
-
-            WebRequest webRequest = WebRequest.Create(url);
-            webRequest.Timeout = 1200;
-            webRequest.Method = "HEAD";
-
-            try
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                webRequest.GetResponse();
-            }
-            catch
-            {
-                result = false;
-            }
+                const string directory = "/tmp/screenshots";
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "sh",
+                        Arguments =
+                            $"ffmpeg -y -i {_service.GetRtmpPath(id)} -vframes {count} {directory}/out_{id}_%03d.jpg",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true
+                    }
+                };
+                process.Start();
+                if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
+                    return NotFound();
+                process.WaitForExit();
 
-            return result;
+                var files = Directory.GetFiles(directory, $"out_{id}_*").Select(f => System.IO.File.Open(f, FileMode.Open));
+                return File(files.First(), "image/jpg");
+            }
+            return NotFound();
         }
     }
 }
