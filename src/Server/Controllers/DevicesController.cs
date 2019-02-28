@@ -65,12 +65,12 @@ namespace FestoVideoStream.Controllers
 
             var result = await _service.UpdateDevice(id, device);
 
-            if (!result)
+            if (result == null)
             {
                 BadRequest();
             }
 
-            return Ok();
+            return Ok(result);
         }
 
         // POST: api/Devices

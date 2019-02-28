@@ -59,7 +59,7 @@ namespace FestoVideoStream.Services
             return _mapper.Map<DeviceDetailsDto>(insertedDevice);
         }
 
-        public async Task<bool> UpdateDevice(int id, DeviceDetailsDto deviceDto)
+        public async Task<DeviceDetailsDto> UpdateDevice(int id, DeviceDetailsDto deviceDto)
         {
             var device = _mapper.Map<Device>(deviceDto);
 
@@ -73,7 +73,7 @@ namespace FestoVideoStream.Services
             {
                 if (!DeviceExists(id))
                 {
-                    return false;
+                    return null;
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace FestoVideoStream.Services
                 }
             }
 
-            return true;
+            return deviceDto;
         }
 
         public async Task<bool> DeleteDevice(int id)
