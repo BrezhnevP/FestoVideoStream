@@ -1,11 +1,10 @@
 ﻿using System;
-using FestoVideoStream.Attributes;
 
 namespace FestoVideoStream.Dto
 {
     public class DeviceDetailsDto
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         public string Name { get; set; }
 

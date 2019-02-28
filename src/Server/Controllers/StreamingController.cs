@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace FestoVideoStream.Controllers
 {
@@ -22,45 +19,54 @@ namespace FestoVideoStream.Controllers
             _service = service;
         }
 
-        // GET: api/stream/dash/5
+        // GET: api/stream/dash/1
         [HttpGet("dash/{id}")]
-        public IActionResult GetManifestPath([FromRoute]Guid id)
+        public IActionResult GetManifestPath([FromRoute] int id)
         {
-            var manifestPath = _service.GetDashManifest(id);
+            var manifestPath = _service.GetDeviceDashManifest(id);
             if (manifestPath != null)
                 return Ok(manifestPath);
-            
+
             return NotFound();
         }
 
-        // GET: api/stream/dash/5
+        // GET: api/stream/1/frames/5
         [HttpGet("{id}/frames/{count}")]
-        public IActionResult GetFrames([FromRoute]Guid id, [FromRoute] int count)
+        public IActionResult GetFrames([FromRoute] int id, [FromRoute] int count)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                const string directory = "/tmp/screenshots";
-                var process = new Process
-                {
-                    StartInfo = new ProcessStartInfo
-                    {
-                        FileName = "sh",
-                        Arguments =
-                            $"ffmpeg -y -i {_service.GetRtmpPath(id)} -vframes {count} {directory}/out_{id}_%03d.jpg",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    }
-                };
-                process.Start();
-                if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
-                    return NotFound();
-                process.WaitForExit();
+            var result = CreateFrames(id, count);
+            if (result != Ok())
+                return result;
 
-                var files = Directory.GetFiles(directory, $"out_{id}_*").Select(f => System.IO.File.Open(f, FileMode.Open));
-                return File(files.First(), "image/jpg");
-            }
-            return NotFound();
+            return Ok(_service.GetFilesUri(id, count));
+        }
+
+        private IActionResult CreateFrames(int id, int count)
+        {
+            var rtmp = _service.GetDeviceRtmpPath(id);
+            if (rtmp == null)
+                return NotFound();
+
+            const string directory = "/tmp/screenshots";
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "sh",
+                    Arguments =
+                        $"ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                }
+            };
+            process.Start();
+            if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
+                return BadRequest();
+
+            process.WaitForExit();
+
+            return Ok();
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FestoVideoStream.Data;
 using FestoVideoStream.Dto;
 using FestoVideoStream.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FestoVideoStream.Services
 {
@@ -39,7 +37,7 @@ namespace FestoVideoStream.Services
             return devices;
         }
 
-        public async Task<DeviceDetailsDto> GetDevice(Guid id)
+        public async Task<DeviceDetailsDto> GetDevice(int id)
         {
             var device = await _context.Devices.Select(d => new DeviceDetailsDto
             {
@@ -55,24 +53,13 @@ namespace FestoVideoStream.Services
 
         public async Task<DeviceDetailsDto> CreateDevice(DeviceDetailsDto deviceDto)
         {
-            var device = _mapper.Map<Device>(deviceDto,
-                options => options.AfterMap((source, target) =>
-                {
-                    ((Device) target).Id = Guid.NewGuid();
-                }));
-
-            if (string.IsNullOrWhiteSpace(device.Config))
-            {
-                device.Config = GetDefaultConfig(device.Id);
-            }
-
-            _context.Devices.Add(device);
+            var insertedDevice = _context.Devices.Add(_mapper.Map<Device>(deviceDto));
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<DeviceDetailsDto>(device);
+            return _mapper.Map<DeviceDetailsDto>(insertedDevice);
         }
 
-        public async Task<bool> UpdateDevice(Guid id, DeviceDetailsDto deviceDto)
+        public async Task<bool> UpdateDevice(int id, DeviceDetailsDto deviceDto)
         {
             var device = _mapper.Map<Device>(deviceDto);
 
@@ -97,7 +84,7 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        public async Task<bool> DeleteDevice(Guid id)
+        public async Task<bool> DeleteDevice(int id)
         {
             var device = await _context.Devices.FindAsync(id);
             if (device == null)
@@ -111,12 +98,12 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        private bool DeviceExists(Guid id)
+        private bool DeviceExists(int id)
         {
             return _context.Devices.Any(e => e.Id == id);
         }
 
-        private string GetDefaultConfig(Guid id)
+        private string GetDefaultConfig(int id)
         {
             
             var configurationString = "ffmpeg -f x11grab -s 1920x1200 " +

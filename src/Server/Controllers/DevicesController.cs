@@ -32,7 +32,7 @@ namespace FestoVideoStream.Controllers
 
         // GET: api/Devices/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDevice([FromRoute] Guid id)
+        public async Task<IActionResult> GetDevice([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -50,8 +50,8 @@ namespace FestoVideoStream.Controllers
         }
 
         // PUT: api/Devices/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDevice([FromRoute] Guid id, [FromBody] DeviceDetailsDto device)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchDevice([FromRoute] int id, [FromBody] DeviceDetailsDto device)
         {
             if (!ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace FestoVideoStream.Controllers
 
         // DELETE: api/Devices/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDevice([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteDevice([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

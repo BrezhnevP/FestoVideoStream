@@ -23,7 +23,7 @@ namespace FestoVideoStream.Migrations
 
             modelBuilder.Entity("FestoVideoStream.Models.Device", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("IpAddress");

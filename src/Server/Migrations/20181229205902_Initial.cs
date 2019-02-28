@@ -11,7 +11,7 @@ namespace FestoVideoStream.Migrations
                 name: "Devices",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<int>(nullable: false),
                     IpAddress = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     Status = table.Column<bool>(nullable: false)
