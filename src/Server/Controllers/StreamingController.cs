@@ -47,7 +47,7 @@ namespace FestoVideoStream.Controllers
             if (rtmp == null)
                 return NotFound();
 
-            const string directory = "/tmp/screenshots";
+            const string directory = "/tmp/frames";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
