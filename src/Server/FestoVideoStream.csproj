@@ -19,6 +19,8 @@
     <Compile Remove="Migrations\20181229204640_Initial.Designer.cs" />
     <Compile Remove="Migrations\20190120154426_AddedConfigColumn.cs" />
     <Compile Remove="Migrations\20190120154426_AddedConfigColumn.Designer.cs" />
+    <Compile Remove="Migrations\20190308164426_added_key.cs" />
+    <Compile Remove="Migrations\20190308164426_added_key.Designer.cs" />
   </ItemGroup>
 
 </Project>

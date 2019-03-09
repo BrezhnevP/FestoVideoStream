@@ -10,18 +10,19 @@ namespace FestoVideoStream.Entities
     /// </summary>
     public class Device
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
 
         /// <summary>
         /// The ip address.
         /// </summary>
         [Required, IpAddress]
-        private string ipAddress { get; set; }
+        public string IpAddress { get; set; }
 
         /// <summary>
         /// The ip address.
         /// </summary>
-        public IPAddress IpAddress => IPAddress.Parse(ipAddress);
+        public IPAddress IPAddress => IPAddress.Parse(IpAddress);
 
         /// <summary>
         /// The name.

@@ -54,7 +54,7 @@ namespace FestoVideoStream.Controllers
                 {
                     FileName = "sh",
                     Arguments =
-                        $"ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
+                        $"sudo ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true

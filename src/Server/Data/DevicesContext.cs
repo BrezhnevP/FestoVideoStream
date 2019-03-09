@@ -11,10 +11,5 @@ namespace FestoVideoStream.Data
         }
 
         public DbSet<Device> Devices { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ForNpgsqlUseIdentityAlwaysColumns();
-        }
     }
 }
