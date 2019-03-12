@@ -24,8 +24,8 @@ export class DeviceDataService {
     return this.http.post<IDeviceDetails>(this.deviceUrl, device);
   }
 
-  editDevice(device: IDevice) {
-    return this.http.put<IDevice>(this.deviceUrl + device.id, device);
+  editDevice(device: IDeviceDetails) {
+    return this.http.patch<IDeviceDetails>(this.deviceUrl + device.id, device);
   }
 
   deleteDevice(device: IDevice) {

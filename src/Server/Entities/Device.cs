@@ -10,6 +10,7 @@ namespace FestoVideoStream.Entities
     /// </summary>
     public class Device
     {
+        [Key]
         public Guid Id { get; set; }
 
         /// <summary>
@@ -17,6 +18,11 @@ namespace FestoVideoStream.Entities
         /// </summary>
         [Required, IpAddress]
         public string IpAddress { get; set; }
+
+        /// <summary>
+        /// The ip address.
+        /// </summary>
+        public IPAddress IPAddress => IPAddress.Parse(IpAddress);
 
         /// <summary>
         /// The name.
@@ -33,6 +39,8 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The current status of the device
         /// </summary>
-        public bool Status => true; //new Ping().Send(IPAddress.Parse(this.IpAddress))?.Status == IPStatus.Success;
+        public bool Status => true; //new Ping().Send(this.ipAddress)?.Status == IPStatus.Success;
+
+
     }
 }

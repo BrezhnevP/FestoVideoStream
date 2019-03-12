@@ -1,9 +1,10 @@
+using AutoMapper;
 using FestoVideoStream.Data;
+using FestoVideoStream.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using AutoMapper;
 using FestoVideoStream.Services;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace FestoVideoStream
 {
@@ -48,6 +50,7 @@ namespace FestoVideoStream
                     options.UseNpgsql(Configuration.GetConnectionString("DevicesContext")));
 
             services.AddScoped<DevicesService>();
+            services.AddScoped<StreamService>();
 
             services.AddCors();
 
@@ -77,7 +80,10 @@ namespace FestoVideoStream
             app.UseMvc();
             app.UseAuthentication();
 
-
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
         }
     }
 }

@@ -1,14 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using FestoVideoStream.Data;
 using FestoVideoStream.Dto;
 using FestoVideoStream.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FestoVideoStream.Services
 {
@@ -16,67 +14,37 @@ namespace FestoVideoStream.Services
     {
         private readonly DevicesContext _context;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
 
-        public DevicesService(IConfiguration configuration, IMapper mapper, DevicesContext context)
+        public DevicesService(IConfiguration configuration, DevicesContext context)
         {
             _configuration = configuration;
-            _mapper = mapper;
             _context = context;
         }
 
-        public IQueryable<DeviceDto> GetDevices()
+        public IQueryable<Device> GetDevices()
         {
-            var devices = _context.Devices.Select(device =>
-                new DeviceDto
-                {
-                    Id = device.Id,
-                    Name = device.Name,
-                    IpAddress = device.IpAddress.ToString(),
-                    Status = device.Status
-                });
+            var devices = _context.Devices;
 
             return devices;
         }
 
-        public async Task<DeviceDetailsDto> GetDevice(Guid id)
+        public async Task<Device> GetDevice(Guid id)
         {
-            var device = await _context.Devices.Select(d => new DeviceDetailsDto
-            {
-                Id = d.Id,
-                Name = d.Name,
-                IpAddress = d.IpAddress.ToString(),
-                Status = d.Status,
-                Config = d.Config
-            }).SingleOrDefaultAsync(d => d.Id == id);
+            var device = await _context.Devices.SingleOrDefaultAsync(d => d.Id == id);
 
             return device;
         }
 
-        public async Task<DeviceDetailsDto> CreateDevice(DeviceDetailsDto deviceDto)
+        public async Task<Device> CreateDevice(Device device)
         {
-            var device = new Device
-            {
-                Id = Guid.NewGuid(),
-                Name = deviceDto.Name,
-                IpAddress = deviceDto.IpAddress,
-                Config = deviceDto.Config
-            };
-
-            if (string.IsNullOrWhiteSpace(device.Config))
-            {
-                device.Config = GetDefaultConfig(device.Id);
-            }
-
-            _context.Devices.Add(device);
+            var insertedDevice = await _context.Devices.AddAsync(device);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<DeviceDetailsDto>(device);
+            return insertedDevice.Entity;
         }
 
-        public async Task<bool> ModifyDevice(Guid id, DeviceDetailsDto device)
+        public async Task<Device> UpdateDevice(Guid id, Device device)
         {
-
             _context.Entry(device).State = EntityState.Modified;
 
             try
@@ -87,7 +55,7 @@ namespace FestoVideoStream.Services
             {
                 if (!DeviceExists(id))
                 {
-                    return false;
+                    return null;
                 }
                 else
                 {
@@ -95,7 +63,7 @@ namespace FestoVideoStream.Services
                 }
             }
 
-            return true;
+            return device;
         }
 
         public async Task<bool> DeleteDevice(Guid id)
@@ -122,7 +90,7 @@ namespace FestoVideoStream.Services
             
             var configurationString = "ffmpeg -f x11grab -s 1920x1200 " +
                                       "-framerate 15 -i :0.0 -c:v libx264 " +
-                                      "-preset fast -pix_fmt yuv420p -s 1280x800 " +
+                                      "-preset fast -pix_fmt yuv420p -s 1024x800 " +
                                       "-threads 0 -f flv " +
                                       $"\"{_configuration.GetValue<string>("RtmpServerPath")}/dash/{id}\"";
 

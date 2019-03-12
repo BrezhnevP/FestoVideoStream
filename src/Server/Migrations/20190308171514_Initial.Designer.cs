@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FestoVideoStream.Migrations
 {
     [DbContext(typeof(DevicesContext))]
-    [Migration("20190120135313_RemovedStatus")]
-    partial class RemovedStatus
+    [Migration("20190308171514_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,9 +26,13 @@ namespace FestoVideoStream.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("IpAddress");
+                    b.Property<string>("Config");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("IpAddress")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

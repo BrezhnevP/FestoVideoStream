@@ -10,7 +10,6 @@ import { IDeviceDetails } from '../../models/idevicedetails.type';
 })
 export class AddDeviceComponent implements OnInit {
 
-  public device: IDeviceDetails;
   addForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder, private router: Router, private dataService: DeviceDataService) {

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Net;
+using System.Diagnostics;
 
 namespace FestoVideoStream.Controllers
 {
@@ -10,42 +12,67 @@ namespace FestoVideoStream.Controllers
     public class StreamController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly StreamService _service;
 
-        public StreamController(IConfiguration configuration)
+        public StreamController(IConfiguration configuration, StreamService service)
         {
             _configuration = configuration;
+            _service = service;
         }
 
-        // GET: api/stream/dash/5
-        [HttpGet("{type}/{id}")]
-        public IActionResult GetManifestPath([FromRoute] string type, [FromRoute]Guid id)
+        // GET: api/stream/1/dash
+        [HttpGet("{id}/dash/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetManifestPath([FromRoute] int id)
         {
-            var streamPath = _configuration.GetValue<string>("HttpServerPath");
-            var manifestPath = $"{streamPath}{type}/{id}.{(type == "dash" ? "mpd" : "m3u8")}";
-            
-            if (UrlExists(manifestPath))
+            var manifestPath = _service.GetDeviceDashManifest(id);
+            if (manifestPath != null)
                 return Ok(manifestPath);
+
             return NotFound();
         }
 
-        private static bool UrlExists(string url)
+        // GET: api/stream/1/frames/5
+        [HttpGet("{id}/frames/{count}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetFrames([FromRoute] int id, [FromRoute] int count)
         {
-            bool result = true;
+            var result = CreateFrames(id, count);
+            if (result != Ok())
+                return result;
 
-            WebRequest webRequest = WebRequest.Create(url);
-            webRequest.Timeout = 1200;
-            webRequest.Method = "HEAD";
+            return Ok(_service.GetFilesUri(id, count));
+        }
 
-            try
+        private IActionResult CreateFrames(int id, int count)
+        {
+            var rtmp = _service.GetDeviceRtmpPath(id);
+            if (rtmp == null)
+                return NotFound();
+
+            const string directory = "/tmp/frames";
+            var process = new Process
             {
-                webRequest.GetResponse();
-            }
-            catch
-            {
-                result = false;
-            }
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "sh",
+                    Arguments =
+                        $"sudo ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                }
+            };
+            process.Start();
+            if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
+                return BadRequest();
 
-            return result;
+            process.WaitForExit();
+
+            return Ok();
         }
     }
 }

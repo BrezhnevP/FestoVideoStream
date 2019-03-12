@@ -9,7 +9,7 @@ export function getBaseUrl() {
 }
 
 export function getApiUrl() {
-  const server = 'https://localhost:5001/';
+  const server = 'http://localhost:5000/';
   return server + 'api';
 }
 

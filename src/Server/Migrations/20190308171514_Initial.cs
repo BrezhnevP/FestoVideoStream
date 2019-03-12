@@ -12,9 +12,9 @@ namespace FestoVideoStream.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    IpAddress = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Status = table.Column<bool>(nullable: false)
+                    IpAddress = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Config = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
