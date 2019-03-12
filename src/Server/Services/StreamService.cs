@@ -10,10 +10,10 @@ namespace FestoVideoStream.Services
     {
         #region Fields
 
-        private readonly IConfiguration _configuration;
+        private readonly IConfiguration configuration;
 
-        private readonly string RtmpServerPath;
-        private readonly string HttpServerPath;
+        private readonly string _rtmpServerPath;
+        private readonly string _httpServerPath;
 
         #endregion
 
@@ -21,21 +21,21 @@ namespace FestoVideoStream.Services
 
         public StreamService(IConfiguration configuration)
         {
-            _configuration = configuration;
+            this.configuration = configuration;
 
-            this.RtmpServerPath = _configuration.GetValue<string>("RtmpServerPath");
-            this.HttpServerPath = _configuration.GetValue<string>("HttpServerPath");
+            this._rtmpServerPath = this.configuration.GetValue<string>("RtmpServerPath");
+            this._httpServerPath = this.configuration.GetValue<string>("HttpServerPath");
         }
 
         #endregion
 
         #region Properties
 
-        public string RtmpPath => $"{RtmpServerPath}/dash/";
+        public string RtmpPath => $"{_rtmpServerPath}/dash/";
 
-        public string DashPath => $"{HttpServerPath}/dash/";
+        public string DashPath => $"{_httpServerPath}/dash/";
 
-        public string FramesPath => $"{HttpServerPath}/frames/";
+        public string FramesPath => $"{_httpServerPath}/frames/";
 
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,8 +20,10 @@ namespace FestoVideoStream.Controllers
             _service = service;
         }
 
-        // GET: api/stream/dash/1
-        [HttpGet("dash/{id}")]
+        // GET: api/stream/1/dash
+        [HttpGet("{id}/dash/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetManifestPath([FromRoute] int id)
         {
             var manifestPath = _service.GetDeviceDashManifest(id);
@@ -32,6 +35,9 @@ namespace FestoVideoStream.Controllers
 
         // GET: api/stream/1/frames/5
         [HttpGet("{id}/frames/{count}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetFrames([FromRoute] int id, [FromRoute] int count)
         {
             var result = CreateFrames(id, count);

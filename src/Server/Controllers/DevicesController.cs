@@ -1,5 +1,6 @@
 ﻿using FestoVideoStream.Dto;
 using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace FestoVideoStream.Controllers
 
         // GET: api/Devices
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetDevices()
         {
             if (!ModelState.IsValid)
@@ -32,6 +35,9 @@ namespace FestoVideoStream.Controllers
 
         // GET: api/Devices/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDevice([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -51,6 +57,8 @@ namespace FestoVideoStream.Controllers
 
         // PUT: api/Devices/5
         [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PatchDevice([FromRoute] int id, [FromBody] DeviceDetailsDto device)
         {
             if (!ModelState.IsValid)
@@ -75,6 +83,8 @@ namespace FestoVideoStream.Controllers
 
         // POST: api/Devices
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostDevice([FromBody] DeviceDetailsDto deviceToCreate)
         {
             if (!ModelState.IsValid)
@@ -88,6 +98,9 @@ namespace FestoVideoStream.Controllers
 
         // DELETE: api/Devices/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteDevice([FromRoute] int id)
         {
             if (!ModelState.IsValid)
