@@ -53,14 +53,14 @@ namespace FestoVideoStream.Controllers
             if (rtmp == null)
                 return NotFound();
 
-            const string directory = "/tmp/screenshots";
+            const string directory = "/tmp/frames";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "sh",
                     Arguments =
-                        $"ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
+                        $"sudo ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true

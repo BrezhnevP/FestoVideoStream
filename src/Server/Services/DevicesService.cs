@@ -37,7 +37,7 @@ namespace FestoVideoStream.Services
             return devices;
         }
 
-        public async Task<DeviceDetailsDto> GetDevice(int id)
+        public async Task<DeviceDetailsDto> GetDevice(Guid id)
         {
             var device = await _context.Devices.Select(d => new DeviceDetailsDto
             {
@@ -59,7 +59,7 @@ namespace FestoVideoStream.Services
             return _mapper.Map<DeviceDetailsDto>(insertedDevice);
         }
 
-        public async Task<DeviceDetailsDto> UpdateDevice(int id, DeviceDetailsDto deviceDto)
+        public async Task<DeviceDetailsDto> UpdateDevice(Guid id, DeviceDetailsDto deviceDto)
         {
             var device = _mapper.Map<Device>(deviceDto);
 
@@ -84,7 +84,7 @@ namespace FestoVideoStream.Services
             return deviceDto;
         }
 
-        public async Task<bool> DeleteDevice(int id)
+        public async Task<bool> DeleteDevice(Guid id)
         {
             var device = await _context.Devices.FindAsync(id);
             if (device == null)
@@ -98,12 +98,12 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        private bool DeviceExists(int id)
+        private bool DeviceExists(Guid id)
         {
             return _context.Devices.Any(e => e.Id == id);
         }
 
-        private string GetDefaultConfig(int id)
+        private string GetDefaultConfig(Guid id)
         {
             
             var configurationString = "ffmpeg -f x11grab -s 1920x1200 " +

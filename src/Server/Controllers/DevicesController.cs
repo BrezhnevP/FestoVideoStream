@@ -38,7 +38,7 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetDevice([FromRoute] int id)
+        public async Task<IActionResult> GetDevice([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace FestoVideoStream.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PatchDevice([FromRoute] int id, [FromBody] DeviceDetailsDto device)
+        public async Task<IActionResult> PatchDevice([FromRoute] Guid id, [FromBody] DeviceDetailsDto device)
         {
             if (!ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteDevice([FromRoute] int id)
+        public async Task<IActionResult> DeleteDevice([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {

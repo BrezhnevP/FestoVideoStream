@@ -21,7 +21,7 @@ namespace FestoVideoStream.Migrations
 
             modelBuilder.Entity("FestoVideoStream.Entities.Device", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Config");

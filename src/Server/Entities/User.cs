@@ -7,7 +7,7 @@ namespace FestoVideoStream.Entities
     /// </summary>
     public class User
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// The name.
