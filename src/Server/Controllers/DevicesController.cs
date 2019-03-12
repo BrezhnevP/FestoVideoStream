@@ -1,9 +1,12 @@
-﻿using FestoVideoStream.Dto;
+﻿using AutoMapper;
+using FestoVideoStream.Dto;
 using FestoVideoStream.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using FestoVideoStream.Entities;
 
 namespace FestoVideoStream.Controllers
 {
@@ -12,10 +15,12 @@ namespace FestoVideoStream.Controllers
     public class DevicesController : ControllerBase
     {
         private readonly DevicesService _service;
+        private readonly IMapper _mapper;
 
-        public DevicesController(DevicesService service)
+        public DevicesController(DevicesService service, IMapper mapper)
         {
             _service = service;
+            _mapper = mapper;
         }
 
         // GET: api/Devices
@@ -28,7 +33,8 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var devices = _service.GetDevices();
+
+            var devices = _service.GetDevices().Select(d => _mapper.Map<DeviceDto>(d));
 
             return Ok(devices);
         }
@@ -45,7 +51,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var device = await _service.GetDevice(id);
+            var device = _mapper.Map<DeviceDetailsDto>(await _service.GetDevice(id));
 
             if (device == null)
             {
@@ -71,7 +77,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var result = await _service.UpdateDevice(id, device);
+            var result = await _service.UpdateDevice(id, _mapper.Map<Device>(device));
 
             if (result == null)
             {
@@ -91,7 +97,7 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var createdDevice = await _service.CreateDevice(deviceToCreate);
+            var createdDevice = await _service.CreateDevice(_mapper.Map<Device>(deviceToCreate));
 
             return CreatedAtAction("GetDevice", new { createdDevice.Id }, createdDevice);
         }

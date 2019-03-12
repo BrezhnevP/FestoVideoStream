@@ -14,55 +14,37 @@ namespace FestoVideoStream.Services
     {
         private readonly DevicesContext _context;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
 
-        public DevicesService(IConfiguration configuration, IMapper mapper, DevicesContext context)
+        public DevicesService(IConfiguration configuration, DevicesContext context)
         {
             _configuration = configuration;
-            _mapper = mapper;
             _context = context;
         }
 
-        public IQueryable<DeviceDto> GetDevices()
+        public IQueryable<Device> GetDevices()
         {
-            var devices = _context.Devices.Select(device =>
-                new DeviceDto
-                {
-                    Id = device.Id,
-                    Name = device.Name,
-                    IpAddress = device.IpAddress.ToString(),
-                    Status = device.Status
-                });
+            var devices = _context.Devices;
 
             return devices;
         }
 
-        public async Task<DeviceDetailsDto> GetDevice(Guid id)
+        public async Task<Device> GetDevice(Guid id)
         {
-            var device = await _context.Devices.Select(d => new DeviceDetailsDto
-            {
-                Id = d.Id,
-                Name = d.Name,
-                IpAddress = d.IpAddress.ToString(),
-                Status = d.Status,
-                Config = d.Config
-            }).SingleOrDefaultAsync(d => d.Id == id);
+            var device = await _context.Devices.SingleOrDefaultAsync(d => d.Id == id);
 
             return device;
         }
 
-        public async Task<DeviceDetailsDto> CreateDevice(DeviceDetailsDto deviceDto)
+        public async Task<Device> CreateDevice(Device device)
         {
-            var insertedDevice = _context.Devices.Add(_mapper.Map<Device>(deviceDto));
+            var insertedDevice = await _context.Devices.AddAsync(device);
             await _context.SaveChangesAsync();
 
-            return _mapper.Map<DeviceDetailsDto>(insertedDevice);
+            return insertedDevice.Entity;
         }
 
-        public async Task<DeviceDetailsDto> UpdateDevice(Guid id, DeviceDetailsDto deviceDto)
+        public async Task<Device> UpdateDevice(Guid id, Device device)
         {
-            var device = _mapper.Map<Device>(deviceDto);
-
             _context.Entry(device).State = EntityState.Modified;
 
             try
@@ -81,7 +63,7 @@ namespace FestoVideoStream.Services
                 }
             }
 
-            return deviceDto;
+            return device;
         }
 
         public async Task<bool> DeleteDevice(Guid id)
