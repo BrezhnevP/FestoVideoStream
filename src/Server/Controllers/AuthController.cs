@@ -45,16 +45,20 @@ namespace FestoVideoStream.Controllers
                 return Unauthorized("Invalid username or password.");
             }
 
-            var tokenOptions = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                claims: identity.Claims,
-                expires: DateTime.Now.AddMinutes(AuthOptions.LIFETIME),
-                signingCredentials: AuthOptions.SigningCredentials
-            );
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = AuthOptions.SigningCredentials
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var encodedToken = tokenHandler.WriteToken(token);
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            return Ok(new {Token = tokenString});
+            return Ok(new {Token = encodedToken});
         }
 
         private ClaimsIdentity GetIdentity(string login, string password)

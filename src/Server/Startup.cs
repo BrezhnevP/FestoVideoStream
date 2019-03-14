@@ -1,18 +1,17 @@
 using AutoMapper;
 using FestoVideoStream.Data;
+using FestoVideoStream.Options;
 using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using AutoMapper;
-using FestoVideoStream.Services;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace FestoVideoStream
 {
@@ -28,19 +27,25 @@ namespace FestoVideoStream
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(x =>
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
+                        // укзывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = false,
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = false,
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.SymmetricSecurityKey,
+                        // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
-
-                        ValidIssuer = "http://localhost:5000",
-                        ValidAudience = "http://localhost:5000",
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))
                     };
                 });
 
@@ -87,6 +92,12 @@ namespace FestoVideoStream
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+        }
+
+        private static void SetAuthenticationOptions(AuthenticationOptions options)
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }
     }
 }
