@@ -14,29 +14,28 @@ namespace FestoVideoStream.Controllers
     [ApiController]
     public class DevicesController : ControllerBase
     {
-        private readonly DevicesService _service;
-        private readonly IMapper _mapper;
+        private readonly DevicesService devicesService;
+        private readonly IMapper mapper;
 
-        public DevicesController(DevicesService service, IMapper mapper)
+        public DevicesController(DevicesService devicesService, IMapper mapper)
         {
-            _service = service;
-            _mapper = mapper;
+            this.devicesService = devicesService;
+            this.mapper = mapper;
         }
 
         // GET: api/Devices
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult GetDevices()
+        public async Task<IActionResult> GetDevices()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var devices = await devicesService.GetDevices();
 
-            var devices = _service.GetDevices().Select(d => _mapper.Map<DeviceDto>(d));
-
-            return Ok(devices);
+            return Ok(devices.Select(d => mapper.Map<DeviceDto>(d)));
         }
 
         // GET: api/Devices/5
@@ -51,7 +50,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var device = _mapper.Map<DeviceDetailsDto>(await _service.GetDevice(id));
+            var device = mapper.Map<DeviceDetailsDto>(await devicesService.GetDevice(id));
 
             if (device == null)
             {
@@ -77,7 +76,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var result = await _service.UpdateDevice(id, _mapper.Map<Device>(device));
+            var result = await devicesService.UpdateDevice(id, mapper.Map<Device>(device));
 
             if (result == null)
             {
@@ -97,7 +96,7 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var createdDevice = await _service.CreateDevice(_mapper.Map<Device>(deviceToCreate));
+            var createdDevice = await devicesService.CreateDevice(mapper.Map<Device>(deviceToCreate));
 
             return CreatedAtAction("GetDevice", new { createdDevice.Id }, createdDevice);
         }
@@ -113,7 +112,7 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await _service.DeleteDevice(id);
+            var result = await devicesService.DeleteDevice(id);
             if (!result)
             {
                 return NotFound();

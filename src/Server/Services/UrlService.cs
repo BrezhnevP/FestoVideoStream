@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace FestoVideoStream.Services
 {
@@ -42,35 +44,31 @@ namespace FestoVideoStream.Services
 
         #region Public methods
 
-        public string GetDeviceRtmpPath(Guid id) => ReturnPathIfExists($"{RtmpPath}/{id}");
+        public string GetDeviceRtmpPath(Guid id) => $"{RtmpPath}/{id}";
 
-        public string GetDeviceDashManifest(Guid id) => ReturnPathIfExists($"{DashPath}/{id}.mpd");
+        public string GetDeviceDashManifest(Guid id) => $"{DashPath}/{id}.mpd";
 
-        public bool UrlExists(string url)
+        public async Task<bool> UrlExists(string url)
         {
-            var webRequest = WebRequest.Create(url);
-            webRequest.Timeout = 1200;
-            webRequest.Method = "HEAD";
-
-            try
+            if (url != null)
             {
-                webRequest.GetResponse();
+                var webRequest = WebRequest.Create(url);
+                webRequest.Timeout = 1200;
+                webRequest.Method = "HEAD";
+
+                try
+                {
+                    await webRequest.GetResponseAsync();
+                }
+                catch
+                {
+                    return false;
+                }
+
+                return true;
             }
-            catch
-            {
-                return false;
-            }
 
-            return true;
-        }
-
-        #endregion
-
-        #region Private methods
-
-        private string ReturnPathIfExists(string path)
-        {
-            return UrlExists(path) ? path : null;
+            return false;
         }
 
         #endregion

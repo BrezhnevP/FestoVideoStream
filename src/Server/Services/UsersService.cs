@@ -9,9 +9,9 @@ namespace FestoVideoStream.Services
 {
     public class UsersService
     {
-        private readonly UsersContext _context;
+        private readonly AppDbContext _context;
 
-        public UsersService(UsersContext context)
+        public UsersService(AppDbContext context)
         {
             _context = context;
         }

@@ -1,8 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
+using System.Net.Sockets;
 
 namespace FestoVideoStream.Services
 {
@@ -35,6 +34,15 @@ namespace FestoVideoStream.Services
             var files = Enumerable.Range(0, count).Select(x => new Uri($"{urlService.FramesPath}/{string.Format(pattern, count)}"));
 
             return files;
+        }
+
+        public bool RtmpAvailable(string url)
+        {
+            Uri.TryCreate(url, UriKind.Absolute, out var uri);
+            var tcpClient = new TcpClient();
+            tcpClient.Connect(uri.Host, uri.Port);
+
+            return tcpClient.Connected;
         }
 
         #endregion

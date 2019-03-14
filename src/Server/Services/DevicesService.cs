@@ -10,25 +10,19 @@ namespace FestoVideoStream.Services
 {
     public class DevicesService
     {
-        private readonly DevicesContext context;
+        private readonly AppDbContext context;
         private readonly UrlService urlService;
 
-        public DevicesService(DevicesContext context, UrlService urlService)
+        public DevicesService(AppDbContext context, UrlService urlService)
         {
             this.urlService = urlService;
             this.context = context;
         }
 
-        public IQueryable<Device> GetDevices()
+        public async Task<IQueryable<Device>> GetDevices()
         {
-            var devices = context.Devices.Select(d => new Device
-            {
-                Id = d.Id,
-                Name = d.Name,
-                IpAddress = d.IpAddress,
-                Config = d.Config,
-                Status = GetDeviceStatus(d.Id)
-            });
+            var devices = context.Devices;
+            await devices.ForEachAsync(async device => device.Status = await GetDeviceStatus(device.Id));
 
             return devices;
         }
@@ -36,7 +30,7 @@ namespace FestoVideoStream.Services
         public async Task<Device> GetDevice(Guid id)
         {
             var device = await context.Devices.SingleOrDefaultAsync(d => d.Id == id);
-            device.Status = GetDeviceStatus(device.Id);
+            device.Status = await GetDeviceStatus(device.Id);
             
             return device;
         }
@@ -59,7 +53,7 @@ namespace FestoVideoStream.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DeviceExists(id))
+                if (!DeviceExists(id).Result)
                 {
                     return null;
                 }
@@ -86,13 +80,13 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        private bool DeviceExists(Guid id)
+        private async Task<bool> DeviceExists(Guid id)
         {
-            return context.Devices.Any(e => e.Id == id);
+            return await context.Devices.AnyAsync(e => e.Id == id);
         }
 
-        private bool GetDeviceStatus(Guid id) =>
-            urlService.UrlExists(urlService.GetDeviceRtmpPath(id));
+        private async Task<bool> GetDeviceStatus(Guid id) =>
+            await urlService.UrlExists(urlService.GetDeviceDashManifest(id));
 
         private string GetDefaultConfig(Guid id) =>
             "ffmpeg -f x11grab -s 1920x1200 " +
