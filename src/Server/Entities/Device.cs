@@ -21,11 +21,6 @@ namespace FestoVideoStream.Entities
         public string IpAddress { get; set; }
 
         /// <summary>
-        /// The ip address.
-        /// </summary>
-        public IPAddress IPAddress => IPAddress.Parse(IpAddress);
-
-        /// <summary>
         /// The name.
         /// </summary>
         [Required]
@@ -41,7 +36,5 @@ namespace FestoVideoStream.Entities
         /// The current status of the device
         /// </summary>
         public bool Status; 
-
-        public Device with
     }
 }

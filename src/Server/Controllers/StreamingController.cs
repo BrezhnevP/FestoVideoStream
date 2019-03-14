@@ -12,22 +12,24 @@ namespace FestoVideoStream.Controllers
     public class StreamController : ControllerBase
     {
         private readonly IConfiguration _configuration;
-        private readonly StreamService _service;
+        private readonly StreamService streamService;
+        private readonly UrlService urlService;
 
-        public StreamController(IConfiguration configuration, StreamService service)
+        public StreamController(IConfiguration configuration, StreamService streamService, UrlService urlService)
         {
             _configuration = configuration;
-            _service = service;
+            this.urlService = urlService;
+            this.streamService = streamService;
         }
 
         // GET: api/stream/1/dash
         [HttpGet("{id}/dash/")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetManifestPath([FromRoute] int id)
+        public IActionResult GetManifestPath([FromRoute] Guid id)
         {
-            var manifestPath = _service.GetDeviceDashManifest(id);
-            if (manifestPath != null)
+            var manifestPath = urlService.GetDeviceDashManifest(id);
+            if (urlService.UrlExists(manifestPath).Result)
                 return Ok(manifestPath);
 
             return NotFound();
@@ -38,18 +40,18 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetFrames([FromRoute] int id, [FromRoute] int count)
+        public IActionResult GetFrames([FromRoute] Guid id, [FromRoute] int count)
         {
             var result = CreateFrames(id, count);
             if (result != Ok())
                 return result;
 
-            return Ok(_service.GetFilesUri(id, count));
+            return Ok(streamService.GetFilesUri(id, count));
         }
 
-        private IActionResult CreateFrames(int id, int count)
+        private IActionResult CreateFrames(Guid id, int count)
         {
-            var rtmp = _service.GetDeviceRtmpPath(id);
+            var rtmp = urlService.GetDeviceRtmpPath(id);
             if (rtmp == null)
                 return NotFound();
 
@@ -60,7 +62,7 @@ namespace FestoVideoStream.Controllers
                 {
                     FileName = "sh",
                     Arguments =
-                        $"sudo ffmpeg -y -i {rtmp} -vframes {count} {directory}/{_service.GetFramesFilePattern(id)}",
+                        $"ffmpeg -y -i {rtmp} -vframes {count} {directory}/{streamService.GetFramesFilePattern(id)}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true

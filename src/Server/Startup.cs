@@ -46,14 +46,13 @@ namespace FestoVideoStream
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<DevicesContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("App")));
-            services.AddDbContext<UsersContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("App")));
 
             services.AddScoped<DevicesService>();
             services.AddScoped<UsersService>();
             services.AddScoped<StreamService>();
+            services.AddScoped<UrlService>();
 
             services.AddCors();
 

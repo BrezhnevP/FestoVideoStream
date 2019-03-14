@@ -20,12 +20,28 @@ namespace FestoVideoStream.Migrations
                 {
                     table.PrimaryKey("PK_Devices", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Login = table.Column<string>(nullable: false),
+                    Password = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => new { x.Id, x.Login });
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "Devices");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

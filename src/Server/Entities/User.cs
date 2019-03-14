@@ -8,13 +8,16 @@ namespace FestoVideoStream.Entities
     /// </summary>
     public class User
     {
+        /// <summary>
+        /// The unique identifier.
+        /// </summary>
         [Key]
         public Guid Id { get; set; }
 
-        [Key]
         /// <summary>
         /// The name.
         /// </summary>
+        [Key]
         public string Login { get; set; }
 
         /// <summary>

@@ -3,15 +3,17 @@ using System;
 using FestoVideoStream.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FestoVideoStream.Migrations
 {
-    [DbContext(typeof(DevicesContext))]
-    partial class DevicesContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AppDbContext))]
+    [Migration("20190314155550_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +37,20 @@ namespace FestoVideoStream.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Devices");
+                });
+
+            modelBuilder.Entity("FestoVideoStream.Entities.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Login");
+
+                    b.Property<string>("Password");
+
+                    b.HasKey("Id", "Login");
+
+                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

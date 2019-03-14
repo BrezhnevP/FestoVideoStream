@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using FestoVideoStream.Options;
 using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace FestoVideoStream.Controllers
 {
@@ -28,6 +29,9 @@ namespace FestoVideoStream.Controllers
 
         // POST: api/auth/login
         [HttpPost, Route("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public IActionResult Login([FromBody]UserDto user)
         {
             if (user == null)

@@ -1,7 +1,14 @@
-﻿namespace FestoVideoStream.Dto
+﻿using System;
+
+namespace FestoVideoStream.Dto
 {
     public class UserDto
     {
+        /// <summary>
+        /// The unique identifier.
+        /// </summary>
+        public Guid Id { get; set; }
+
         /// <summary>
         /// The name.
         /// </summary>
