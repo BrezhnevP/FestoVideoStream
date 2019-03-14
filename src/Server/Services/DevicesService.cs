@@ -1,55 +1,61 @@
-﻿using AutoMapper;
-using FestoVideoStream.Data;
-using FestoVideoStream.Dto;
+﻿using FestoVideoStream.Data;
 using FestoVideoStream.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace FestoVideoStream.Services
 {
     public class DevicesService
     {
-        private readonly DevicesContext _context;
-        private readonly IConfiguration _configuration;
+        private readonly DevicesContext context;
+        private readonly UrlService urlService;
 
-        public DevicesService(IConfiguration configuration, DevicesContext context)
+        public DevicesService(DevicesContext context, UrlService urlService)
         {
-            _configuration = configuration;
-            _context = context;
+            this.urlService = urlService;
+            this.context = context;
         }
 
         public IQueryable<Device> GetDevices()
         {
-            var devices = _context.Devices;
+            var devices = context.Devices.Select(d => new Device
+            {
+                Id = d.Id,
+                Name = d.Name,
+                IpAddress = d.IpAddress,
+                Config = d.Config,
+                Status = GetDeviceStatus(d.Id)
+            });
 
             return devices;
         }
 
         public async Task<Device> GetDevice(Guid id)
         {
-            var device = await _context.Devices.SingleOrDefaultAsync(d => d.Id == id);
-
+            var device = await context.Devices.SingleOrDefaultAsync(d => d.Id == id);
+            device.Status = GetDeviceStatus(device.Id);
+            
             return device;
         }
 
         public async Task<Device> CreateDevice(Device device)
         {
-            var insertedDevice = await _context.Devices.AddAsync(device);
-            await _context.SaveChangesAsync();
+            var insertedDevice = await context.Devices.AddAsync(device);
+            await context.SaveChangesAsync();
 
             return insertedDevice.Entity;
         }
 
         public async Task<Device> UpdateDevice(Guid id, Device device)
         {
-            _context.Entry(device).State = EntityState.Modified;
+            context.Entry(device).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -68,33 +74,31 @@ namespace FestoVideoStream.Services
 
         public async Task<bool> DeleteDevice(Guid id)
         {
-            var device = await _context.Devices.FindAsync(id);
+            var device = await context.Devices.FindAsync(id);
             if (device == null)
             {
                 return false;
             }
 
-            _context.Devices.Remove(device);
-            await _context.SaveChangesAsync();
+            context.Devices.Remove(device);
+            await context.SaveChangesAsync();
 
             return true;
         }
 
         private bool DeviceExists(Guid id)
         {
-            return _context.Devices.Any(e => e.Id == id);
+            return context.Devices.Any(e => e.Id == id);
         }
 
-        private string GetDefaultConfig(Guid id)
-        {
-            
-            var configurationString = "ffmpeg -f x11grab -s 1920x1200 " +
-                                      "-framerate 15 -i :0.0 -c:v libx264 " +
-                                      "-preset fast -pix_fmt yuv420p -s 1024x800 " +
-                                      "-threads 0 -f flv " +
-                                      $"\"{_configuration.GetValue<string>("RtmpServerPath")}/dash/{id}\"";
+        private bool GetDeviceStatus(Guid id) =>
+            urlService.UrlExists(urlService.GetDeviceRtmpPath(id));
 
-            return configurationString;
-        }
+        private string GetDefaultConfig(Guid id) =>
+            "ffmpeg -f x11grab -s 1920x1200 " +
+            "-framerate 15 -i :0.0 -c:v libx264 " +
+            "-preset fast -pix_fmt yuv420p -s 1024x800 " +
+            "-threads 0 -f flv " +
+            $"\"{urlService.RtmpPath}/{id}\"";
     }
 }

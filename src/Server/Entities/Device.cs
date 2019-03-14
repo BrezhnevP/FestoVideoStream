@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using FestoVideoStream.Attributes;
+using FestoVideoStream.Services;
 
 namespace FestoVideoStream.Entities
 {
@@ -39,8 +40,8 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The current status of the device
         /// </summary>
-        public bool Status => true; //new Ping().Send(this.ipAddress)?.Status == IPStatus.Success;
+        public bool Status; 
 
-
+        public Device with
     }
 }
