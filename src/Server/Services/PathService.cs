@@ -1,12 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 
 namespace FestoVideoStream.Services
 {
-    public class UrlService
+    public class PathService
     {
         #region Fields
 
@@ -22,7 +19,7 @@ namespace FestoVideoStream.Services
 
         #region Ctor
 
-        public UrlService(IConfiguration configuration)
+        public PathService(IConfiguration configuration)
         {
             this.configuration = configuration;
 
@@ -47,29 +44,6 @@ namespace FestoVideoStream.Services
         public string GetDeviceRtmpPath(Guid id) => $"{RtmpPath}/{id}";
 
         public string GetDeviceDashManifest(Guid id) => $"{DashPath}/{id}.mpd";
-
-        public async Task<bool> UrlExists(string url)
-        {
-            if (url != null)
-            {
-                var webRequest = WebRequest.Create(url);
-                webRequest.Timeout = 1200;
-                webRequest.Method = "HEAD";
-
-                try
-                {
-                    await webRequest.GetResponseAsync();
-                }
-                catch
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            return false;
-        }
 
         #endregion
     }

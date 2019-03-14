@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using FestoVideoStream.Dto;
+using FestoVideoStream.Entities;
 using FestoVideoStream.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FestoVideoStream.Entities;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 
 namespace FestoVideoStream.Controllers
 {

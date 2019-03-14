@@ -13,12 +13,12 @@ namespace FestoVideoStream.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly StreamService streamService;
-        private readonly UrlService urlService;
+        private readonly PathService _pathService;
 
-        public StreamController(IConfiguration configuration, StreamService streamService, UrlService urlService)
+        public StreamController(IConfiguration configuration, StreamService streamService, PathService pathService)
         {
             _configuration = configuration;
-            this.urlService = urlService;
+            this._pathService = pathService;
             this.streamService = streamService;
         }
 
@@ -28,11 +28,22 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetManifestPath([FromRoute] Guid id)
         {
-            var manifestPath = urlService.GetDeviceDashManifest(id);
-            if (urlService.UrlExists(manifestPath).Result)
+            var manifestPath = _pathService.GetDeviceDashManifest(id);
+            if (_pathService.UrlExists(manifestPath).Result)
                 return Ok(manifestPath);
 
             return NotFound();
+        }
+
+        // GET: api/stream/1/rtmp
+        [HttpGet("{id}/rtmp/")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetRtmpStreamPath([FromRoute] Guid id)
+        {
+            var rtmpPath = _pathService.GetDeviceRtmpPath(id);
+
+            return Ok(rtmpPath);
         }
 
         // GET: api/stream/1/frames/5
@@ -51,7 +62,7 @@ namespace FestoVideoStream.Controllers
 
         private IActionResult CreateFrames(Guid id, int count)
         {
-            var rtmp = urlService.GetDeviceRtmpPath(id);
+            var rtmp = _pathService.GetDeviceRtmpPath(id);
             if (rtmp == null)
                 return NotFound();
 

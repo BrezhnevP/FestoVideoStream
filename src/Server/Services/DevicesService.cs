@@ -11,11 +11,11 @@ namespace FestoVideoStream.Services
     public class DevicesService
     {
         private readonly AppDbContext context;
-        private readonly UrlService urlService;
+        private readonly PathService _pathService;
 
-        public DevicesService(AppDbContext context, UrlService urlService)
+        public DevicesService(AppDbContext context, PathService pathService)
         {
-            this.urlService = urlService;
+            this._pathService = pathService;
             this.context = context;
         }
 
@@ -86,13 +86,13 @@ namespace FestoVideoStream.Services
         }
 
         private async Task<bool> GetDeviceStatus(Guid id) =>
-            await urlService.UrlExists(urlService.GetDeviceDashManifest(id));
+            await _pathService.UrlExists(_pathService.GetDeviceDashManifest(id));
 
         private string GetDefaultConfig(Guid id) =>
             "ffmpeg -f x11grab -s 1920x1200 " +
             "-framerate 15 -i :0.0 -c:v libx264 " +
             "-preset fast -pix_fmt yuv420p -s 1024x800 " +
             "-threads 0 -f flv " +
-            $"\"{urlService.RtmpPath}/{id}\"";
+            $"\"{_pathService.RtmpPath}/{id}\"";
     }
 }

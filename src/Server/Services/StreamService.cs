@@ -9,15 +9,15 @@ namespace FestoVideoStream.Services
     {
         #region Fields
 
-        private readonly UrlService urlService;
+        private readonly PathService _pathService;
 
         #endregion
 
         #region Ctor
 
-        public StreamService(UrlService urlService)
+        public StreamService(PathService pathService)
         {
-            this.urlService = urlService;
+            this._pathService = pathService;
         }
 
         #endregion
@@ -31,18 +31,9 @@ namespace FestoVideoStream.Services
         public IEnumerable<Uri> GetFilesUri(Guid id, int count)
         {
             var pattern = this.GetFramesFileUriPattern(id);
-            var files = Enumerable.Range(0, count).Select(x => new Uri($"{urlService.FramesPath}/{string.Format(pattern, count)}"));
+            var files = Enumerable.Range(0, count).Select(x => new Uri($"{_pathService.FramesPath}/{string.Format(pattern, count)}"));
 
             return files;
-        }
-
-        public bool RtmpAvailable(string url)
-        {
-            Uri.TryCreate(url, UriKind.Absolute, out var uri);
-            var tcpClient = new TcpClient();
-            tcpClient.Connect(uri.Host, uri.Port);
-
-            return tcpClient.Connected;
         }
 
         #endregion

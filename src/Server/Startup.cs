@@ -57,7 +57,7 @@ namespace FestoVideoStream
             services.AddScoped<DevicesService>();
             services.AddScoped<UsersService>();
             services.AddScoped<StreamService>();
-            services.AddScoped<UrlService>();
+            services.AddScoped<PathService>();
 
             services.AddCors();
 
