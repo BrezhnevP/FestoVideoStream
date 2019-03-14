@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FestoVideoStream.Entities
 {
@@ -7,12 +8,14 @@ namespace FestoVideoStream.Entities
     /// </summary>
     public class User
     {
+        [Key]
         public Guid Id { get; set; }
 
+        [Key]
         /// <summary>
         /// The name.
         /// </summary>
-        public string Name { get; set; }
+        public string Login { get; set; }
 
         /// <summary>
         /// The name.

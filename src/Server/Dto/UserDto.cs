@@ -5,7 +5,7 @@
         /// <summary>
         /// The name.
         /// </summary>
-        public string Name { get; set; }
+        public string Login { get; set; }
 
         /// <summary>
         /// The name.

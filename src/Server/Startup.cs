@@ -52,6 +52,7 @@ namespace FestoVideoStream
                 options.UseNpgsql(Configuration.GetConnectionString("App")));
 
             services.AddScoped<DevicesService>();
+            services.AddScoped<UsersService>();
             services.AddScoped<StreamService>();
 
             services.AddCors();
