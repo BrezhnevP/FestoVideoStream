@@ -31,7 +31,7 @@ namespace FestoVideoStream.Services
         public IEnumerable<Uri> GetFilesUri(Guid id, int count)
         {
             var pattern = this.GetFramesFileUriPattern(id);
-            var files = Enumerable.Range(0, count).Select(x => new Uri($"{_pathService.FramesPath}/{string.Format(pattern, count)}"));
+            var files = Enumerable.Range(0, count).Select(x => new Uri($"{_pathService.FramesUrl}/{string.Format(pattern, count)}"));
 
             return files;
         }

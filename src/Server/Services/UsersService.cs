@@ -9,60 +9,60 @@ namespace FestoVideoStream.Services
 {
     public class UsersService
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext context;
 
         public UsersService(AppDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public IQueryable<User> GetUsers()
         {
-            var users = _context.Users;
+            var users = this.context.Users;
 
             return users;
         }
 
         public async Task<User> GetUser(Guid id)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(d => d.Id == id);
+            var user = await this.context.Users.SingleOrDefaultAsync(d => d.Id == id);
 
             return user;
         }
 
         public async Task<User> GetUser(string login)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(d => d.Login == login);
+            var user = await this.context.Users.SingleOrDefaultAsync(d => d.Login == login);
 
             return user;
         }
 
         public async Task<User> GetUser(string login, string password)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(u => u.Login == login && u.Password == password);
+            var user = await this.context.Users.SingleOrDefaultAsync(u => u.Login == login && u.Password == password);
 
             return user;
         }
 
         public async Task<User> CreateUser(User user)
         {
-            var insertedUser = await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            var insertedUser = await this.context.Users.AddAsync(user);
+            await this.context.SaveChangesAsync();
 
             return insertedUser.Entity;
         }
 
         public async Task<User> UpdateUser(Guid id, User user)
         {
-            _context.Entry(user).State = EntityState.Modified;
+            this.context.Entry(user).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await this.context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!this.UserExists(id))
                 {
                     return null;
                 }
@@ -77,21 +77,21 @@ namespace FestoVideoStream.Services
 
         public async Task<bool> DeleteUser(Guid id)
         {
-            var User = await _context.Users.FindAsync(id);
-            if (User == null)
+            var user = await this.context.Users.FindAsync(id);
+            if (user == null)
             {
                 return false;
             }
 
-            _context.Users.Remove(User);
-            await _context.SaveChangesAsync();
+            this.context.Users.Remove(user);
+            await this.context.SaveChangesAsync();
 
             return true;
         }
 
         private bool UserExists(Guid id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return this.context.Users.Any(e => e.Id == id);
         }
     }
 }

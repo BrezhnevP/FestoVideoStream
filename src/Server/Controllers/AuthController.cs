@@ -14,20 +14,48 @@ using Microsoft.AspNetCore.Http;
 
 namespace FestoVideoStream.Controllers
 {
+    /// <summary>
+    /// The auth controller.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : Controller
     {
-        private readonly UsersService _service;
-        private readonly IMapper _mapper;
+        /// <summary>
+        /// The service.
+        /// </summary>
+        private readonly UsersService service;
 
+        /// <summary>
+        /// The mapper.
+        /// </summary>
+        private readonly IMapper mapper;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthController"/> class.
+        /// </summary>
+        /// <param name="service">
+        /// The service.
+        /// </param>
+        /// <param name="mapper">
+        /// The mapper.
+        /// </param>
         public AuthController(UsersService service, IMapper mapper)
         {
-            _service = service;
-            _mapper = mapper;
+            this.service = service;
+            this.mapper = mapper;
         }
 
-        // POST: api/auth/login
+        /// POST: api/auth/login
+        /// <summary>
+        /// The login.
+        /// </summary>
+        /// <param name="user">
+        /// The user.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
         [HttpPost, Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -61,9 +89,21 @@ namespace FestoVideoStream.Controllers
             return Ok(new {Token = encodedToken});
         }
 
+        /// <summary>
+        /// The get identity.
+        /// </summary>
+        /// <param name="login">
+        /// The login.
+        /// </param>
+        /// <param name="password">
+        /// The password.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ClaimsIdentity"/>.
+        /// </returns>
         private ClaimsIdentity GetIdentity(string login, string password)
         {
-            User user = _service.GetUser(login, password).Result;
+            var user = this.service.GetUser(login, password).Result;
             if (user != null)
             {
                 var claims = new List<Claim>
@@ -75,7 +115,6 @@ namespace FestoVideoStream.Controllers
                 return claimsIdentity;
             }
 
-            // если пользователя не найдено
             return null;
         }
     }

@@ -7,13 +7,6 @@ namespace FestoVideoStream.Services
 {
     public class ConnectionService
     {
-        private readonly PathService _pathService;
-
-        public ConnectionService(PathService pathService)
-        {
-            this._pathService = pathService;
-        }
-
         public bool RtmpAvailable(string url)
         {
             Uri.TryCreate(url, UriKind.Absolute, out var uri);

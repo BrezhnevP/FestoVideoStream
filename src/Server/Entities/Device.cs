@@ -11,29 +11,31 @@ namespace FestoVideoStream.Entities
     /// </summary>
     public class Device
     {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
         [Key]
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The ip address.
+        /// Gets or sets the IP address.
         /// </summary>
         [Required, IpAddress]
         public string IpAddress { get; set; }
 
         /// <summary>
-        /// The name.
+        /// Gets or sets the name.
         /// </summary>
         [Required]
         public string Name { get; set; }
 
         /// <summary>
-        /// The configuration string of the device
-        /// </summary>  
+        /// Gets or sets the config.
+        /// </summary>
         public string Config { get; set; }
 
-        //TODO
         /// <summary>
-        /// The current status of the device
+        /// The status.
         /// </summary>
         public bool Status; 
     }

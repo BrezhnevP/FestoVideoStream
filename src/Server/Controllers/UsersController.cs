@@ -11,20 +11,46 @@ using System.Threading.Tasks;
 
 namespace FestoVideoStream.Controllers
 {
+    /// <inheritdoc />
+    /// <summary>
+    /// The users controller.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
+        /// <summary>
+        /// The users service.
+        /// </summary>
         private readonly UsersService usersService;
+
+        /// <summary>
+        /// The mapper.
+        /// </summary>
         private readonly IMapper mapper;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UsersController"/> class.
+        /// </summary>
+        /// <param name="usersService">
+        /// The users service.
+        /// </param>
+        /// <param name="mapper">
+        /// The mapper.
+        /// </param>
         public UsersController(UsersService usersService, IMapper mapper)
         {
             this.usersService = usersService;
             this.mapper = mapper;
         }
 
-        // GET: api/Users
+        /// GET: api/users
+        /// <summary>
+        /// The get users.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
         [Authorize]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -36,12 +62,21 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = usersService.GetUsers().Select(d => mapper.Map<UserDto>(d));
+            var users = this.usersService.GetUsers().Select(d => this.mapper.Map<UserDto>(d));
 
             return Ok(users);
         }
 
-        // GET: api/Users/5
+        /// GET: api/Users/5
+        /// <summary>
+        /// The get user.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
         [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -54,7 +89,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = mapper.Map<UserDto>(await usersService.GetUser(id));
+            var user = this.mapper.Map<UserDto>(await this.usersService.GetUser(id));
 
             if (user == null)
             {
@@ -64,7 +99,19 @@ namespace FestoVideoStream.Controllers
             return Ok(user);
         }
 
-        // PUT: api/Users/5
+        /// PATCH: api/Users/5
+        /// <summary>
+        /// The patch user.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <param name="user">
+        /// The user.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
         [Authorize]
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -81,7 +128,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var result = await usersService.UpdateUser(id, mapper.Map<User>(user));
+            var result = await this.usersService.UpdateUser(id, this.mapper.Map<User>(user));
 
             if (result == null)
             {
@@ -91,7 +138,16 @@ namespace FestoVideoStream.Controllers
             return Ok(result);
         }
 
-        // POST: api/Users
+        /// POST: api/Users
+        /// <summary>
+        /// The post user.
+        /// </summary>
+        /// <param name="userToCreate">
+        /// The user to create.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,12 +157,21 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var createdUser = await usersService.CreateUser(mapper.Map<User>(userToCreate));
+            var createdUser = await this.usersService.CreateUser(this.mapper.Map<User>(userToCreate));
 
             return CreatedAtAction("GetUser", new { createdUser.Id }, createdUser);
         }
 
-        // DELETE: api/Users/5
+        /// DELETE: api/Users/5
+        /// <summary>
+        /// The delete user.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
         [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

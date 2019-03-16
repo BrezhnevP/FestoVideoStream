@@ -2,7 +2,6 @@ using AutoMapper;
 using FestoVideoStream.Data;
 using FestoVideoStream.Options;
 using FestoVideoStream.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +18,7 @@ namespace FestoVideoStream
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -58,6 +57,7 @@ namespace FestoVideoStream
             services.AddScoped<UsersService>();
             services.AddScoped<StreamService>();
             services.AddScoped<PathService>();
+            services.AddScoped<ConnectionService>();
 
             services.AddCors();
 
@@ -92,12 +92,6 @@ namespace FestoVideoStream
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-        }
-
-        private static void SetAuthenticationOptions(AuthenticationOptions options)
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }
     }
 }
