@@ -16,27 +16,25 @@ namespace FestoVideoStream.Services
             return tcpClient.Connected;
         }
 
-        public async Task<bool> UrlExists(string url)
+        public static async Task<bool> UrlExists(string url)
         {
-            if (url != null)
+            if (url == null)
+                return false;
+
+            var webRequest = WebRequest.Create(url);
+            webRequest.Timeout = 1200;
+            webRequest.Method = WebRequestMethods.Http.Head;
+
+            try
             {
-                var webRequest = WebRequest.Create(url);
-                webRequest.Timeout = 1200;
-                webRequest.Method = "HEAD";
-
-                try
-                {
-                    await webRequest.GetResponseAsync();
-                }
-                catch
-                {
-                    return false;
-                }
-
-                return true;
+                await webRequest.GetResponseAsync();
+            }
+            catch
+            {
+                return false;
             }
 
-            return false;
+            return true;
         }
     }
 }

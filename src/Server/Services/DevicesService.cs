@@ -9,32 +9,18 @@ namespace FestoVideoStream.Services
 {
     public class DevicesService
     {
-        private readonly AppDbContext context;
-        private readonly PathService pathService;
-        private readonly ConnectionService connectionService;
+        private readonly AppDbContext _context;
+        private readonly PathService _pathService;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DevicesService"/> class.
-        /// </summary>
-        /// <param name="context">
-        /// The context.
-        /// </param>
-        /// <param name="pathService">
-        /// The path service.
-        /// </param>
-        /// <param name="connectionService">
-        /// The connection service.
-        /// </param>
-        public DevicesService(AppDbContext context, PathService pathService, ConnectionService connectionService)
+        public DevicesService(AppDbContext context, PathService pathService)
         {
-            this.pathService = pathService;
-            this.connectionService = connectionService;
-            this.context = context;
+            this._pathService = pathService;
+            this._context = context;
         }
 
         public async Task<IQueryable<Device>> GetDevices()
         {
-            var devices = this.context.Devices;
+            var devices = this._context.Devices;
             await devices.ForEachAsync(async device => device.DeviceStatus = await GetDeviceStreamStatus(device.Id));
 
             return devices;
@@ -42,7 +28,7 @@ namespace FestoVideoStream.Services
 
         public async Task<Device> GetDevice(Guid id)
         {
-            var device = await this.context.Devices.SingleOrDefaultAsync(d => d.Id == id);
+            var device = await this._context.Devices.SingleOrDefaultAsync(d => d.Id == id);
             device.DeviceStatus = await this.GetDeviceStreamStatus(device.Id);
             
             return device;
@@ -50,19 +36,19 @@ namespace FestoVideoStream.Services
 
         public async Task<Device> CreateDevice(Device device)
         {
-            var insertedDevice = await this.context.Devices.AddAsync(device);
-            await this.context.SaveChangesAsync();
+            var insertedDevice = await this._context.Devices.AddAsync(device);
+            await this._context.SaveChangesAsync();
 
             return insertedDevice.Entity;
         }
 
         public async Task<Device> UpdateDevice(Guid id, Device device)
         {
-            this.context.Entry(device).State = EntityState.Modified;
+            this._context.Entry(device).State = EntityState.Modified;
 
             try
             {
-                await this.context.SaveChangesAsync();
+                await this._context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,52 +65,31 @@ namespace FestoVideoStream.Services
             return device;
         }
 
-        public async Task<Device> UpdateDevice(Device device)
-        {
-            this.context.Entry(device).State = EntityState.Modified;
-
-            try
-            {
-                await this.context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DeviceExists(device.Id).Result)
-                {
-                    return null;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return device;
-        }
+        public async Task<Device> UpdateDevice(Device device) => await UpdateDevice(device.Id, device);
 
         public async Task<bool> DeleteDevice(Guid id)
         {
-            var device = await this.context.Devices.FindAsync(id);
+            var device = await this._context.Devices.FindAsync(id);
             if (device == null)
             {
                 return false;
             }
 
-            this.context.Devices.Remove(device);
-            await this.context.SaveChangesAsync();
+            this._context.Devices.Remove(device);
+            await this._context.SaveChangesAsync();
 
             return true;
         }
 
         public async Task<bool> GetDeviceStreamStatus(Guid id) =>
-            await this.connectionService.UrlExists(this.pathService.GetDeviceDashManifest(id));
+            await ConnectionService.UrlExists(this._pathService.GetDeviceDashManifest(id));
 
         public async Task<bool> GetDeviceStreamStatus(Device device) =>
-            await this.connectionService.UrlExists(this.pathService.GetDeviceDashManifest(device.Id));
+            await ConnectionService.UrlExists(this._pathService.GetDeviceDashManifest(device.Id));
 
         private async Task<bool> DeviceExists(Guid id)
         {
-            return await this.context.Devices.AnyAsync(e => e.Id == id);
+            return await this._context.Devices.AnyAsync(e => e.Id == id);
         }
 
         private string GetDefaultConfig(Guid id) =>
@@ -132,6 +97,6 @@ namespace FestoVideoStream.Services
             "-framerate 15 -i :0.0 -c:v libx264 " +
             "-preset fast -pix_fmt yuv420p -s 1024x800 " +
             "-threads 0 -f flv " +
-            $"\"{this.pathService.RtmpUrl}/{id}\"";
+            $"\"{this._pathService.RtmpUrl}/{id}\"";
     }
 }

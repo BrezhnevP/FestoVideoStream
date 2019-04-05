@@ -8,10 +8,9 @@ namespace FestoVideoStream.Attributes
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var device = (Device) validationContext.ObjectInstance;
-            if (device.IpAddress == null)
-                return new ValidationResult("Incorrect IP address");
-
-            return ValidationResult.Success;
+            return device.IpAddress == null 
+                ? new ValidationResult("Incorrect IP address") 
+                : ValidationResult.Success;
         }
     }
 }

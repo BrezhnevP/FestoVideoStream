@@ -17,17 +17,12 @@ namespace FestoVideoStream.Controllers
         /// <summary>
         /// The stream service.
         /// </summary>
-        private readonly StreamService streamService;
+        private readonly StreamService _streamService;
 
         /// <summary>
         /// The path service.
         /// </summary>
-        private readonly PathService pathService;
-
-        /// <summary>
-        /// The connection service.
-        /// </summary>
-        private readonly ConnectionService connectionService;
+        private readonly PathService _pathService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamController"/> class.
@@ -38,14 +33,10 @@ namespace FestoVideoStream.Controllers
         /// <param name="pathService">
         /// The path service.
         /// </param>
-        /// <param name="connectionService">
-        /// The connection service.
-        /// </param>
-        public StreamController(StreamService streamService, PathService pathService, ConnectionService connectionService)
+        public StreamController(StreamService streamService, PathService pathService)
         {
-            this.pathService = pathService;
-            this.connectionService = connectionService;
-            this.streamService = streamService;
+            this._pathService = pathService;
+            this._streamService = streamService;
         }
 
         /// GET: api/stream/1/dash
@@ -63,8 +54,8 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetManifestUrl([FromRoute] Guid id)
         {
-            var manifestPath = this.pathService.GetDeviceDashManifest(id);
-            if (!this.connectionService.UrlExists(manifestPath).Result)
+            var manifestPath = this._pathService.GetDeviceDashManifest(id);
+            if (!ConnectionService.UrlExists(manifestPath).Result)
             {
                 return NotFound();
             }
@@ -87,7 +78,7 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetRtmpStreamUrl([FromRoute] Guid id)
         {
-            var rtmpPath = this.pathService.GetDeviceRtmpPath(id);
+            var rtmpPath = this._pathService.GetDeviceRtmpPath(id);
 
             return Ok(rtmpPath);
         }
@@ -113,7 +104,7 @@ namespace FestoVideoStream.Controllers
         {
             var result = this.CreateFrames(id, count);
 
-            return result != this.Ok() ? result : this.Ok(this.streamService.GetFilesUri(id, count));
+            return result != this.Ok() ? result : this.Ok(this._streamService.GetFilesUri(id, count));
         }
 
         /// <summary>
@@ -130,7 +121,7 @@ namespace FestoVideoStream.Controllers
         /// </returns>
         private IActionResult CreateFrames(Guid id, int count)
         {
-            var rtmp = this.pathService.GetDeviceRtmpPath(id);
+            var rtmp = this._pathService.GetDeviceRtmpPath(id);
             if (rtmp == null)
             {
                 return NotFound();
@@ -142,7 +133,7 @@ namespace FestoVideoStream.Controllers
                 {
                     FileName = "sh",
                     Arguments =
-                        $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{this.streamService.GetFramesFilePattern(id)}",
+                        $"ffmpeg -y -i {rtmp} -vframes {count} {this._pathService.FramesDirectory}/{this._streamService.GetFramesFilePattern(id)}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true

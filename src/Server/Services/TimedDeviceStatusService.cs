@@ -47,10 +47,18 @@ namespace FestoVideoStream.Services
                 var devices = await devicesService.GetDevices();
                 await devices.ForEachAsync(async device =>
                 {
+                    var isActive = await devicesService.GetDeviceStreamStatus(device);
                     var isStreaming = await devicesService.GetDeviceStreamStatus(device);
-                    if (isStreaming)
+                    if (isActive || isStreaming)
                     {
-                        device.LastStreamingDate = DateTime.Now;
+                        if (isActive)
+                        {
+                            device.LastActivityDate = DateTime.Now;
+                        }
+                        if (isStreaming)
+                        {
+                            device.LastStreamingDate = DateTime.Now;
+                        }
                         await devicesService.UpdateDevice(device);
                     }
                 });

@@ -89,7 +89,6 @@ namespace FestoVideoStream
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseAuthentication();
-
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
