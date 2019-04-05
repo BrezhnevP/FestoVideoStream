@@ -59,6 +59,8 @@ namespace FestoVideoStream
             services.AddScoped<PathService>();
             services.AddScoped<ConnectionService>();
 
+            services.AddHostedService<TimedDeviceStatusService>();
+
             services.AddCors();
 
             // Auto Mapper Configurations
