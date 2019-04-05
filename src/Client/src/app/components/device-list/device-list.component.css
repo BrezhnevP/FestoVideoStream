@@ -50,8 +50,29 @@ td .span_link{
 .edit_td .left_button{
 	margin-right: 5px;
 }
-
 tbody tr{
 	border-bottom: 2px solid #dee2e6;
 }
-
+.pagebtn{
+}
+.pagebtn.next{
+	float: right;
+}
+.btn-wrapper{
+	width: 120px;
+	float: right;
+	margin-right: 30px;
+}
+.btn-wrapper.pages{
+	width: 150px;
+	position: relative;
+	top: 5px;
+}
+.btn-wrapper.pages .pagebtn{
+	font-size: 12px;
+	font-weight: 500;
+	box-shadow: none;
+}
+.margin{
+	margin-right: 5px;
+}

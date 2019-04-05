@@ -10,8 +10,8 @@ namespace FestoVideoStream.Services
         private static readonly Uri DashPath = new Uri("/dash", UriKind.Relative);
         private static readonly Uri FramesPath = new Uri("/frames", UriKind.Relative);
 
-        private readonly Uri rtmpServerPath;
-        private readonly Uri httpServerPath;
+        private readonly Uri _rtmpServerPath;
+        private readonly Uri _httpServerPath;
 
         #endregion
 
@@ -19,8 +19,8 @@ namespace FestoVideoStream.Services
 
         public PathService(IConfiguration configuration)
         {
-            this.rtmpServerPath = new Uri(configuration.GetValue<string>("RtmpServerPath"), UriKind.Absolute);
-            this.httpServerPath = new Uri(configuration.GetValue<string>("HttpServerPath"), UriKind.Absolute);
+            this._rtmpServerPath = new Uri(configuration.GetValue<string>("RtmpServerPath"), UriKind.Absolute);
+            this._httpServerPath = new Uri(configuration.GetValue<string>("HttpServerPath"), UriKind.Absolute);
             this.FramesDirectory = configuration.GetValue<string>("FramesDirectory");
         }
 
@@ -28,11 +28,11 @@ namespace FestoVideoStream.Services
 
         #region Properties
 
-        public Uri RtmpUrl => new Uri(this.rtmpServerPath, DashPath);
+        public Uri RtmpUrl => new Uri(this._rtmpServerPath, DashPath);
 
-        public Uri DashUrl => new Uri(this.httpServerPath, DashPath);
+        public Uri DashUrl => new Uri(this._httpServerPath, DashPath);
 
-        public Uri FramesUrl => new Uri(this.httpServerPath, FramesPath);
+        public Uri FramesUrl => new Uri(this._httpServerPath, FramesPath);
 
         public string FramesDirectory { get; }
 

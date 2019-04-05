@@ -59,6 +59,8 @@ namespace FestoVideoStream
             services.AddScoped<PathService>();
             services.AddScoped<ConnectionService>();
 
+            services.AddHostedService<TimedDeviceStatusService>();
+
             services.AddCors();
 
             // Auto Mapper Configurations
@@ -87,7 +89,6 @@ namespace FestoVideoStream
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseAuthentication();
-
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto

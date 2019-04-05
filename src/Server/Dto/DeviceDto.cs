@@ -10,6 +10,12 @@ namespace FestoVideoStream.Dto
 
         public string IpAddress { get; set; }
 
-        public bool Status { get; set; }
+        public bool DeviceStatus;
+
+        public DateTime? LastActivityDate { get; set; }
+
+        public bool StreamingStatus;
+
+        public DateTime? LastStreamingDate { get; set; }
     }
 }

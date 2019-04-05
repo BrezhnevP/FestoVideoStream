@@ -35,8 +35,23 @@ namespace FestoVideoStream.Entities
         public string Config { get; set; }
 
         /// <summary>
+        /// The device status.
+        /// </summary>
+        public bool DeviceStatus;
+
+        /// <summary>
         /// The status.
         /// </summary>
-        public bool Status;
+        public DateTime? LastActivityDate { get; set; }
+
+        /// <summary>
+        /// The device's stream status.
+        /// </summary>
+        public bool StreamingStatus;
+
+        /// <summary>
+        /// The status.
+        /// </summary>
+        public DateTime? LastStreamingDate { get; set; }
     }
 }
