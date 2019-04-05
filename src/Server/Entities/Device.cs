@@ -37,6 +37,6 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The status.
         /// </summary>
-        public bool Status; 
+        public bool Status;
     }
 }

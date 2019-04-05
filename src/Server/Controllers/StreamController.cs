@@ -113,7 +113,7 @@ namespace FestoVideoStream.Controllers
         {
             var result = this.CreateFrames(id, count);
 
-            return result != this.Ok() ? result : this.Ok(this.streamService.GetFilesUri(id, count));
+            return result == true ? this.Ok(this.streamService.GetFilesUri(id, count)) : result == false ? (IActionResult)this.BadRequest() : this.NotFound();
         }
 
         /// <summary>
@@ -128,34 +128,40 @@ namespace FestoVideoStream.Controllers
         /// <returns>
         /// The <see cref="IActionResult"/>.
         /// </returns>
-        private IActionResult CreateFrames(Guid id, int count)
+        private bool? CreateFrames(Guid id, int count)
         {
             var rtmp = this.pathService.GetDeviceRtmpPath(id);
             if (rtmp == null)
             {
-                return NotFound();
+                return null;
             }
-
-            var process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo
+                var process = new Process
+                                  {
+                                      StartInfo = new ProcessStartInfo
+                                                      {
+                                                          FileName = "sh",
+                                                          Arguments =
+                                                              $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{this.streamService.GetFramesFilePattern(id)}",
+                                                          UseShellExecute = false,
+                                                          RedirectStandardOutput = true,
+                                                          RedirectStandardError = true
+                                                      }
+                                  };
+                process.Start();
+                if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
                 {
-                    FileName = "sh",
-                    Arguments =
-                        $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{this.streamService.GetFramesFilePattern(id)}",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
+                    return false;
                 }
-            };
-            process.Start();
-            if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
-            {
-                return BadRequest();
+                process.WaitForExit();
             }
-            process.WaitForExit();
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
 
-            return Ok();
+            return true;
         }
     }
 }

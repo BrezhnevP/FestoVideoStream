@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using FestoVideoStream.Dto;
+using FestoVideoStream.Entities;
 using FestoVideoStream.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using FestoVideoStream.Entities;
 
 namespace FestoVideoStream.Controllers
 {
@@ -14,6 +14,8 @@ namespace FestoVideoStream.Controllers
     [ApiController]
     public class DevicesController : ControllerBase
     {
+        private const int PageSize = 5;
+
         private readonly DevicesService devicesService;
         private readonly IMapper mapper;
 
@@ -24,18 +26,35 @@ namespace FestoVideoStream.Controllers
         }
 
         // GET: api/Devices
-        [HttpGet]
+        [HttpGet("{page?}/{sortBy?}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetDevices()
+        public async Task<IActionResult> GetDevices([FromQuery] int? page, [FromQuery] string sortBy)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var devices = await devicesService.GetDevices();
+            var devices = await this.devicesService.GetDevices();
+            if (!string.IsNullOrWhiteSpace(sortBy))
+            {
+                switch (sortBy)
+                {
+                    case "IPAddress":
+                        devices = devices.OrderBy(d => d.IpAddress);
+                        break;
 
-            return Ok(devices.Select(d => mapper.Map<DeviceDto>(d)));
+                    case "Name":
+                        devices = devices.OrderBy(d => d.Name);
+                        break;
+                }
+            }
+            if (page != null)
+            {
+                devices = devices.Skip(((int)page - 1) * PageSize).Take(PageSize);
+            }
+
+            return Ok(devices.Select(d => this.mapper.Map<DeviceDto>(d)));
         }
 
         // GET: api/Devices/5
@@ -50,7 +69,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var device = mapper.Map<DeviceDetailsDto>(await devicesService.GetDevice(id));
+            var device = this.mapper.Map<DeviceDetailsDto>(await this.devicesService.GetDevice(id));
 
             if (device == null)
             {
@@ -76,7 +95,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var result = await devicesService.UpdateDevice(id, mapper.Map<Device>(device));
+            var result = await this.devicesService.UpdateDevice(id, this.mapper.Map<Device>(device));
 
             if (result == null)
             {
@@ -96,7 +115,7 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var createdDevice = await devicesService.CreateDevice(mapper.Map<Device>(deviceToCreate));
+            var createdDevice = await this.devicesService.CreateDevice(this.mapper.Map<Device>(deviceToCreate));
 
             return CreatedAtAction("GetDevice", new { createdDevice.Id }, createdDevice);
         }
@@ -112,7 +131,7 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var result = await devicesService.DeleteDevice(id);
+            var result = await this.devicesService.DeleteDevice(id);
             if (!result)
             {
                 return NotFound();
