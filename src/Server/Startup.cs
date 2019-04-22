@@ -50,8 +50,9 @@ namespace FestoVideoStream
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddDbContext<AppDbContext>(options =>
-                    options.UseNpgsql(Configuration.GetConnectionString("App")));
+            services.AddDbContext<AppDbContext>(
+                contextLifetime: ServiceLifetime.Transient, optionsAction: options =>
+                    options.UseNpgsql(this.Configuration.GetConnectionString("App")));
 
             services.AddScoped<DevicesService>();
             services.AddScoped<UsersService>();
@@ -59,7 +60,7 @@ namespace FestoVideoStream
             services.AddScoped<PathService>();
             services.AddScoped<ConnectionService>();
 
-            services.AddHostedService<TimedDeviceStatusService>();
+            // services.AddHostedService<TimedDeviceStatusService>();
 
             services.AddCors();
 

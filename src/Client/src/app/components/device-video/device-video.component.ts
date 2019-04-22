@@ -13,7 +13,8 @@ export interface IMediaStream {
 
 @Component({
   selector: 'app-device-video',
-  templateUrl: './device-video.component.html'
+  templateUrl: './device-video.component.html',
+  styleUrls: ['./device-video.component.css']
 })
 export class DeviceVideoComponent implements OnInit {
   @ViewChild(VgDASH) vgDash: VgDASH;
@@ -25,7 +26,7 @@ export class DeviceVideoComponent implements OnInit {
   api: VgAPI;
 
   constructor(private http: HttpClient, @Inject('API_URL') apiUrl: string) {
-    this.streamUrl = apiUrl + '/stream/dash/';
+    this.streamUrl = apiUrl + '/stream/';
   }
 
   onPlayerReady(api: VgAPI) {
@@ -33,7 +34,7 @@ export class DeviceVideoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get(this.streamUrl + this.deviceId, { responseType: 'text' }).subscribe(result => {
+    this.http.get(this.streamUrl + this.deviceId + '/dash', { responseType: 'text' }).subscribe(result => {
       this.currentStream = result;
     }, error => console.error(error));
   }

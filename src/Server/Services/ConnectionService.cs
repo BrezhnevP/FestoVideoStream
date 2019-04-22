@@ -7,6 +7,25 @@ namespace FestoVideoStream.Services
 {
     public class ConnectionService
     {
+        public static async Task<bool> UrlExistsAsync(string url)
+        {
+            if (url == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                await GetHeadRequest(url).GetResponseAsync();
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public bool RtmpAvailable(string url)
         {
             Uri.TryCreate(url, UriKind.Absolute, out var uri);
@@ -16,25 +35,13 @@ namespace FestoVideoStream.Services
             return tcpClient.Connected;
         }
 
-        public static async Task<bool> UrlExists(string url)
+        private static WebRequest GetHeadRequest(string url)
         {
-            if (url == null)
-                return false;
-
             var webRequest = WebRequest.Create(url);
             webRequest.Timeout = 1200;
             webRequest.Method = WebRequestMethods.Http.Head;
 
-            try
-            {
-                await webRequest.GetResponseAsync();
-            }
-            catch
-            {
-                return false;
-            }
-
-            return true;
+            return webRequest;
         }
     }
 }

@@ -2,6 +2,8 @@
 
 namespace FestoVideoStream.Dto
 {
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public class DeviceDetailsDto
     {
         public Guid Id { get; set; }
@@ -12,24 +14,12 @@ namespace FestoVideoStream.Dto
 
         public string Config { get; set; }
 
-        /// <summary>
-        /// The device status.
-        /// </summary>
-        public bool DeviceStatus;
+        public bool DeviceStatus { get; set; }
 
-        /// <summary>
-        /// The status.
-        /// </summary>
         public DateTime? LastActivityDate { get; set; }
 
-        /// <summary>
-        /// The device's stream status.
-        /// </summary>
-        public bool StreamingStatus;
+        public bool StreamingStatus { get; set; }
 
-        /// <summary>
-        /// The status.
-        /// </summary>
         public DateTime? LastStreamingDate { get; set; }
     }
 }

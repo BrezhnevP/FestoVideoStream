@@ -9,42 +9,42 @@ namespace FestoVideoStream.Services
 {
     public class TimedDeviceStatusService : IHostedService, IDisposable
     {
-        private readonly IServiceProvider _serviceProvider;
-        private Timer _timer;
+        private readonly IServiceProvider serviceProvider;
+        private Timer timer;
 
         public TimedDeviceStatusService(IServiceProvider serviceProvider)
         {
-            _serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _timer = new Timer(CheckDevicesStreamStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+            this.timer = new Timer(this.CheckDevicesStreamStatus, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
 
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _timer?.Change(Timeout.Infinite, 0);
+            this.timer?.Change(Timeout.Infinite, 0);
 
             return Task.CompletedTask;
         }
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            this.timer?.Dispose();
         }
 
         private async void CheckDevicesStreamStatus(object state)
         {
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = this.serviceProvider.CreateScope())
             {
                 var devicesService =
                     scope.ServiceProvider
                         .GetRequiredService<DevicesService>();
 
-                var devices = await devicesService.GetDevices();
+                var devices = await devicesService.GetDevices(false);
                 await devices.ForEachAsync(async device =>
                 {
                     var isActive = await devicesService.GetDeviceStreamStatus(device);

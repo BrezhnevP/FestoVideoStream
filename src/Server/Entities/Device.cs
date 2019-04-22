@@ -1,11 +1,11 @@
-﻿using System;
+﻿using FestoVideoStream.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using FestoVideoStream.Attributes;
-using FestoVideoStream.Services;
 
 namespace FestoVideoStream.Entities
 {
+    using System.ComponentModel.DataAnnotations.Schema;
+
     /// <summary>
     /// The device.
     /// </summary>
@@ -37,21 +37,17 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The device status.
         /// </summary>
-        public bool DeviceStatus;
+        [NotMapped]
+        public bool DeviceStatus { get; set; }
 
-        /// <summary>
-        /// The status.
-        /// </summary>
         public DateTime? LastActivityDate { get; set; }
 
         /// <summary>
         /// The device's stream status.
         /// </summary>
-        public bool StreamingStatus;
+        [NotMapped]
+        public bool StreamingStatus { get; set; }
 
-        /// <summary>
-        /// The status.
-        /// </summary>
         public DateTime? LastStreamingDate { get; set; }
     }
 }

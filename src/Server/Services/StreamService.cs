@@ -11,7 +11,7 @@ namespace FestoVideoStream.Services
         private readonly PathService pathService;
 
         #endregion
-
+        
         #region Ctor
 
         public StreamService(PathService pathService)
@@ -21,16 +21,16 @@ namespace FestoVideoStream.Services
 
         #endregion
 
+        public static string GetFramesFilePattern(Guid id) => $"out_{id}_%03d.jpg";
+
+        public static string GetFramesFileUriPattern(Guid id) => $"out_{id}_" + "{0}.jpg";
+
         #region Public methods
-
-        public string GetFramesFilePattern(Guid id) => $"out_{id}_%03d.jpg";
-
-        public string GetFramesFileUriPattern(Guid id) => $"out_{id}_" + "{0}.jpg";
 
         public IEnumerable<Uri> GetFilesUri(Guid id, int count)
         {
-            var pattern = this.GetFramesFileUriPattern(id);
-            var files = Enumerable.Range(0, count).Select(x => new Uri($"{this.pathService.FramesUrl}/{string.Format(pattern, count)}"));
+            var pattern = GetFramesFileUriPattern(id);
+            var files = Enumerable.Range(1, count).Select(x => new Uri($"{this.pathService.FramesUrl}/{string.Format(pattern, count)}"));
 
             return files;
         }

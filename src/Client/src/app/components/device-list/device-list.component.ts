@@ -8,7 +8,7 @@ import { DeviceDataService } from '../../services/device.service';
   styleUrls: ['./device-list.component.css']
 })
 export class DeviceListComponent {
-  public devices: IDevice[]
+  public devices: IDevice[];
 
   constructor(private dataService: DeviceDataService) {
     this.dataService.getDevices().subscribe(result => {

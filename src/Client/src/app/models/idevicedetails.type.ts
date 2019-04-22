@@ -3,5 +3,8 @@ export interface IDeviceDetails {
   ipAddress: string;
   name: string;
   config: string;
-  status: boolean;
+  deviceStatus: boolean;
+  lastActivityDate: Date;
+  streamingStatus: boolean;
+  lastStreamingDate: Date;
 }

@@ -17,12 +17,12 @@ namespace FestoVideoStream.Controllers
         /// <summary>
         /// The stream service.
         /// </summary>
-        private readonly StreamService _streamService;
+        private readonly StreamService streamService;
 
         /// <summary>
         /// The path service.
         /// </summary>
-        private readonly PathService _pathService;
+        private readonly PathService pathService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamController"/> class.
@@ -35,8 +35,8 @@ namespace FestoVideoStream.Controllers
         /// </param>
         public StreamController(StreamService streamService, PathService pathService)
         {
-            this._pathService = pathService;
-            this._streamService = streamService;
+            this.pathService = pathService;
+            this.streamService = streamService;
         }
 
         /// GET: api/stream/1/dash
@@ -54,8 +54,8 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetManifestUrl([FromRoute] Guid id)
         {
-            var manifestPath = this._pathService.GetDeviceDashManifest(id);
-            if (!ConnectionService.UrlExists(manifestPath).Result)
+            var manifestPath = this.pathService.GetDeviceDashManifest(id);
+            if (!ConnectionService.UrlExistsAsync(manifestPath).Result)
             {
                 return NotFound();
             }
@@ -73,12 +73,12 @@ namespace FestoVideoStream.Controllers
         /// <returns>
         /// The <see cref="IActionResult"/>.
         /// </returns>
-        [HttpGet("{id}/rtmp/")]
+        [HttpGet("{id}/rtmp")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetRtmpStreamUrl([FromRoute] Guid id)
         {
-            var rtmpPath = this._pathService.GetDeviceRtmpPath(id);
+            var rtmpPath = this.pathService.GetDeviceRtmpPath(id);
 
             return Ok(rtmpPath);
         }
@@ -104,7 +104,11 @@ namespace FestoVideoStream.Controllers
         {
             var result = this.CreateFrames(id, count);
 
-            return result == true ? this.Ok(this.streamService.GetFilesUri(id, count)) : result == false ? (IActionResult)this.BadRequest() : this.NotFound();
+            return result == true 
+                       ? this.Ok(this.streamService.GetFilesUri(id, count)) 
+                       : result == false
+                           ? (IActionResult)this.BadRequest() 
+                           : this.NotFound();
         }
 
         /// <summary>
@@ -121,35 +125,22 @@ namespace FestoVideoStream.Controllers
         /// </returns>
         private bool? CreateFrames(Guid id, int count)
         {
-            var rtmp = this._pathService.GetDeviceRtmpPath(id);
+            var rtmp = this.pathService.GetDeviceRtmpPath(id);
             if (rtmp == null)
             {
                 return null;
             }
-            try
+
+            var processInfo = new ProcessStartInfo(
+                "sudo",
+                $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}");
+            using (var p = Process.Start(processInfo))
             {
-                var process = new Process
-                                  {
-                                      StartInfo = new ProcessStartInfo
-                                                      {
-                                                          FileName = "sh",
-                                                          Arguments =
-                                                              $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{this.streamService.GetFramesFilePattern(id)}",
-                                                          UseShellExecute = false,
-                                                          RedirectStandardOutput = true,
-                                                          RedirectStandardError = true
-                                                      }
-                                  };
-                process.Start();
-                if (!string.IsNullOrEmpty(process.StandardError.ReadToEnd()))
+                if (p != null)
                 {
-                    return false;
+                    var strOutput = p.StandardOutput.ReadToEnd();
+                    p.WaitForExit();
                 }
-                process.WaitForExit();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
             }
 
             return true;

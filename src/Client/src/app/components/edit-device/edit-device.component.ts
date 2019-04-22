@@ -33,7 +33,7 @@ export class EditDeviceComponent implements OnInit {
         name: result.name,
         ipAddress: result.ipAddress,
         config: result.config,
-        stasus: result.status
+        stasus: result.deviceStatus
       });
     }, error => console.error(error));
 
