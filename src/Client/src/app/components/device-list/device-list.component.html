@@ -2,30 +2,34 @@
 <p *ngIf="!devices"><em>Loading...</em></p>
 
 <div *ngIf="devices">
-<ng-container *ngIf="{ a: -1, b: 5, c: 5 }; let variable">
+<ng-container *ngIf="{ a: -1, b: 5, c: 5, d:5, e:1, call:''}; let variable">
   <a [routerLink]="['/devices/add']"><button type="button" class="btn btn-primary">Add Device</button></a>
   <div class = "btn-wrapper">
-          <button type="button" class="btn pagebtn btn-outline-info next" *ngIf="variable.b < devices.length" (click)="variable.a = variable.a + variable.c; variable.b = variable.b + variable.c ">Next</button>
-          <button type="button" class="btn pagebtn btn-outline-info" *ngIf="variable.a > 0" (click)="variable.a = variable.a - variable.c;variable.b = variable.b - variable.c ">Prev</button>
+          <button type="button" class="btn pagebtn btn-outline-info next" *ngIf="variable.b < devices.length" (click)="variable.a = variable.a + variable.c; variable.b = variable.b + variable.c; variable.e = variable.e + 1 ">Next</button>
+          <button type="button" class="btn pagebtn btn-outline-info" *ngIf="variable.a > 0" (click)="variable.a = variable.a - variable.c;variable.b = variable.b - variable.c;variable.e = variable.e - 1 ">Prev</button>
   </div>
   <div class="btn-wrapper pages">
-     <button type="button" class="btn pagebtn btn-outline-secondary next" (click)="variable.c = 15;variable.b = 15;variable.a = -1">15</button>
-     <button type="button" class="btn pagebtn btn-outline-secondary next margin" (click)="variable.c = 10;variable.b = 10;variable.a = -1">10</button>
-     <button type="button" class="btn pagebtn btn-outline-secondary next margin" (click)="variable.c = 5;variable.b = 5;variable.a = -1">5</button>
+     <button type="button" class="btn pagebtn btn-outline-secondary next" (click)="variable.c = 15;variable.b = 15;variable.d = 15;variable.a = -1;variable.e = 1">15</button>
+     <button type="button" class="btn pagebtn btn-outline-secondary next margin" (click)="variable.c = 10;variable.b = 10;variable.d = 10;variable.a = -1;variable.e = 1">10</button>
+     <button type="button" class="btn pagebtn btn-outline-secondary next margin" (click)="variable.c = 5;variable.b = 5;variable.d = 5;variable.a = -1;variable.e = 1">5</button>
   </div>
   <table class='table' *ngIf="devices">
     <thead>
       <tr>
-        <th>IP Address</th>
-        <th>Name</th>
-        <th>Status</th>
+        <th>№</th>
+        <th (click)="variable.call = sortbyid(variable.call)">ID</th>
+        <th (click)="variable.call = sortbyip(variable.call)">IP Address</th>
+        <th (click)="variable.call = sortbyname(variable.call)">Name</th>
+        <th (click)="variable.call = sortbyonline(variable.call)">Online</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let device of devices; let i = index">
       <tr *ngIf="i > variable.a && i < variable.b" ng-click="">
-        <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{i+1}}.{{ device.ipAddress }}</a></td>
+        <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{i+1}}</a></td>
+        <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{ device.id }}</a></td>
+        <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{ device.ipAddress }}</a></td>
         <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{ device.name }}</a></td>
         <td>
           <a class="cell_link" [routerLink]="['/devices/details', device.id]">
@@ -33,16 +37,17 @@
           </a>
         </td>
         <td class="edit_td">
+          <a class = "span_link" [routerLink]="['/devices/']" (click)="deleteDevice(device)"><button type="button" class="btn btn-danger">Delete</button></a>
           <a class="span_link" [routerLink]="['/devices/edit', device.id]"><button type="button" class="btn btn-success left_button">Edit</button></a>
-          <a [routerLink]="['/devices/']" (click)="deleteDevice(device)"><button type="button" class="btn btn-danger">Delete</button></a>
         </td>
       </tr>
       </ng-container>
     </tbody>
   </table>
-      <div class = "btn-wrapper">
-          <button type="button" class="btn pagebtn btn-outline-info next" *ngIf="variable.b < devices.length-1" (click)="variable.a = variable.a + variable.c; variable.b = variable.b + variable.c ">Next</button>
-          <button type="button" class="btn pagebtn btn-outline-info" *ngIf="variable.a > 0" (click)="variable.a = variable.a - variable.c;variable.b = variable.b - variable.c ">Prev</button>
+  <p class = "pagenumb">Page {{variable.e}} of {{getpagenumb(devices.length / variable.d)}}</p>
+      <div class = "btn-wrapper bottom">
+          <button type="button" class="btn pagebtn btn-outline-info next" *ngIf="variable.b < devices.length" (click)="variable.a = variable.a + variable.c; variable.b = variable.b + variable.c; variable.e = variable.e + 1 ">Next</button>
+          <button type="button" class="btn pagebtn btn-outline-info" *ngIf="variable.a > 0" (click)="variable.a = variable.a - variable.c;variable.b = variable.b - variable.c; variable.e = variable.e - 1 ">Prev</button>
       </div>
 </ng-container>
 </div>
