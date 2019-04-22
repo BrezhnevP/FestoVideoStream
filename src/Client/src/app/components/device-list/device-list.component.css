@@ -7,7 +7,9 @@ font-weight: 700;
 li {
   cursor: pointer;
 }
-
+thead th{
+	cursor: pointer;
+}
 li.selected {
   font-weight: bold;
 }
@@ -36,10 +38,10 @@ td span{
 	margin-left: 17px;
 }
 td .span_link{
-	margin-left: 20px;
+	margin-left: 5px;
+	float:right;
 }
 .edit_td{
-	border-left: 2px solid #dee2e6;
 }
 .edit_td button{
 	margin-top: 0px;
@@ -68,6 +70,9 @@ tbody tr{
 	position: relative;
 	top: 5px;
 }
+.btn-wrapper.bottom{
+	margin-top: -40px;
+}
 .btn-wrapper.pages .pagebtn{
 	font-size: 12px;
 	font-weight: 500;
@@ -75,4 +80,7 @@ tbody tr{
 }
 .margin{
 	margin-right: 5px;
+}
+p.pagenumb{
+	margin-top: 10px;
 }
