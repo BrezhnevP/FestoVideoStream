@@ -102,8 +102,8 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetFrames([FromRoute] Guid id, [FromRoute] int count)
         {
+            return this.Ok(this.streamService.GetFilesUri(id, count));
             var result = this.CreateFrames(id, count);
-
             return result == true 
                        ? this.Ok(this.streamService.GetFilesUri(id, count)) 
                        : result == false
