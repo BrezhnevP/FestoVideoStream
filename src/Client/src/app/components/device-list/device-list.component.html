@@ -10,6 +10,7 @@
       <button type="button" class="btn pagebtn btn-outline-info" *ngIf="variable.a > 0"
         (click)="variable.a = variable.a - variable.c;variable.b = variable.b - variable.c;variable.e = variable.e - 1 ">Prev</button>
     </div>
+    <button class="btn btn-primary" (click)=refreshList()><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
     <div class="btn-wrapper pages">
       <button type="button" class="btn pagebtn btn-outline-secondary next"
         (click)="variable.c = 15;variable.b = 15;variable.d = 15;variable.a = -1;variable.e = 1">15</button>
