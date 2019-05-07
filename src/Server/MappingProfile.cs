@@ -13,7 +13,6 @@ namespace FestoVideoStream
 
             CreateMap<Device, DeviceDto>();
             CreateMap<Device, DeviceDetailsDto>();
-
             CreateMap<DeviceDetailsDto, DeviceDto>();
             CreateMap<DeviceDto, DeviceDetailsDto>();
         }

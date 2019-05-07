@@ -23,6 +23,6 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The name.
         /// </summary>
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
     }
 }

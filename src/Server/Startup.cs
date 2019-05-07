@@ -69,8 +69,7 @@ namespace FestoVideoStream
             {
                 mc.AddProfile(new MappingProfile());
             });
-
-            IMapper mapper = mappingConfig.CreateMapper();
+            var mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
         }
 

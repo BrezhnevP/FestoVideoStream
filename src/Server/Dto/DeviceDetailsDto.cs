@@ -2,8 +2,6 @@
 
 namespace FestoVideoStream.Dto
 {
-    using System.ComponentModel.DataAnnotations.Schema;
-
     public class DeviceDetailsDto
     {
         public Guid Id { get; set; }

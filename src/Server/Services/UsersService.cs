@@ -39,7 +39,7 @@ namespace FestoVideoStream.Services
 
         public async Task<User> GetUser(string login, string password)
         {
-            var user = await this.context.Users.SingleOrDefaultAsync(u => u.Login == login && u.Password == password);
+            var user = await this.context.Users.SingleOrDefaultAsync(u => u.Login == login && u.PasswordHash == password);
 
             return user;
         }

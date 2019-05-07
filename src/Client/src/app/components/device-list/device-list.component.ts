@@ -65,11 +65,11 @@ export class DeviceListComponent {
   }
   sortbyonline(call: string) {
     if (call !== 'onlinetop') {
-      this.devices = this.devices.sort((a, b) => a.deviceStatus > b.deviceStatus ? -1 : a.deviceStatus < b.deviceStatus ? 1 : 0);
+      this.devices = this.devices.sort((a, b) => a.streamingStatus > b.streamingStatus ? -1 : a.streamingStatus < b.streamingStatus ? 1 : 0);
       call = 'onlinetop';
       return call;
     } else {
-      this.devices = this.devices.sort((a, b) => a.deviceStatus < b.deviceStatus ? -1 : a.deviceStatus > b.deviceStatus ? 1 : 0);
+      this.devices = this.devices.sort((a, b) => a.streamingStatus < b.streamingStatus ? -1 : a.streamingStatus > b.streamingStatus ? 1 : 0);
       call = '';
       return call;
     }
