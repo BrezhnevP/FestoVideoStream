@@ -14,7 +14,6 @@ namespace FestoVideoStream.Services
             {
                 return false;
             }
-
             try
             {
                 await GetHeadRequest(url).GetResponseAsync();

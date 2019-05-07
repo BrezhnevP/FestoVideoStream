@@ -31,10 +31,6 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetDevices([FromQuery] int? page, [FromQuery] string sortBy)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
             var devices = await this.devicesService.GetDevices();
             if (!string.IsNullOrWhiteSpace(sortBy))
             {
@@ -64,11 +60,6 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDevice([FromRoute] Guid id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var device = this.mapper.Map<DeviceDetailsDto>(await this.devicesService.GetDevice(id));
 
             if (device == null)
@@ -83,25 +74,24 @@ namespace FestoVideoStream.Controllers
         [HttpPatch("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> PatchDevice([FromRoute] Guid id, [FromBody] DeviceDetailsDto device)
+        public async Task<IActionResult> PatchDevice([FromRoute] Guid id, [FromBody] DeviceDetailsDto deviceDetailsDto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != device.Id)
+            if (id != deviceDetailsDto.Id)
             {
                 return BadRequest();
             }
 
-            var result = await this.devicesService.UpdateDevice(id, this.mapper.Map<Device>(device));
-
-            if (result == null)
+            var device = this.mapper.Map<Device>(deviceDetailsDto);
+            if (!TryValidateModel(device))
             {
-                BadRequest();
+                return BadRequest();
             }
 
+            var result = await this.devicesService.UpdateDevice(id, device);
+            if (result == null)
+            {
+                return BadRequest();
+            }
             return Ok(result);
         }
 
@@ -111,11 +101,12 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostDevice([FromBody] DeviceDetailsDto deviceToCreate)
         {
-            if (!ModelState.IsValid)
+            var device = this.mapper.Map<Device>(deviceToCreate);
+            if (!TryValidateModel(device))
             {
-                return BadRequest(ModelState);
+                return BadRequest();
             }
-            var createdDevice = await this.devicesService.CreateDevice(this.mapper.Map<Device>(deviceToCreate));
+            var createdDevice = await this.devicesService.CreateDevice(device);
 
             return CreatedAtAction("GetDevice", new { createdDevice.Id }, createdDevice);
         }
