@@ -53,11 +53,11 @@ namespace FestoVideoStream.Services
                     {
                         if (isActive)
                         {
-                            device.LastActivityDate = DateTime.Now;
+                            device.LastActivityDate = DateTime.UtcNow;
                         }
                         if (isStreaming)
                         {
-                            device.LastStreamingDate = DateTime.Now;
+                            device.LastStreamingDate = DateTime.UtcNow;
                         }
                         await devicesService.UpdateDevice(device);
                     }

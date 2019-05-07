@@ -23,18 +23,23 @@ namespace FestoVideoStream.Services
         public async Task<IQueryable<Device>> GetDevices(bool withStatus = true)
         {
             var devices = context.Devices;
+            
             if (withStatus)
             {
-                return devices.Select(device => new Device
+                var devicesAsync = await devices.ToListAsync();
+                var devicesWithStatus = devicesAsync.Select(async device => new Device
                 {
                     Id = device.Id,
                     Name = device.Name,
                     IpAddress = device.IpAddress,
                     Config = device.Config,
-                    DeviceStatus = this.GetDeviceStreamStatus(device).Result,
+                    DeviceStatus = await this.GetDeviceStatus(device),
                     LastActivityDate = device.LastActivityDate,
+                    StreamingStatus = await this.GetDeviceStreamStatus(device),
                     LastStreamingDate = device.LastStreamingDate
                 });
+
+                return Task.WhenAll(devicesWithStatus).Result.AsQueryable();
             }
 
             return devices;
@@ -99,7 +104,10 @@ namespace FestoVideoStream.Services
             await ConnectionService.UrlExistsAsync(this.pathService.GetDeviceDashManifest(id));
 
         public async Task<bool> GetDeviceStreamStatus(Device device) =>
-            await ConnectionService.UrlExistsAsync(this.pathService.GetDeviceDashManifest(device.Id));
+            await this.GetDeviceStreamStatus(device.Id);
+
+        public async Task<bool> GetDeviceStatus(Device device) =>
+            await ConnectionService.DeviceAvailable(device.IpAddress);
 
         public async Task SetDeviceStreamStatus(Device device)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -24,6 +25,19 @@ namespace FestoVideoStream.Services
             }
 
             return true;
+        }
+
+        public static async Task<bool> DeviceAvailable(string ip)
+        {
+            if (ip == null)
+                return false;
+
+            var ipAddress = IPAddress.Parse(ip);
+            var ping = new Ping();
+            var response = await ping.SendPingAsync(ipAddress, 3000);
+
+            return response.Status == IPStatus.Success;
+
         }
 
         public bool RtmpAvailable(string url)
