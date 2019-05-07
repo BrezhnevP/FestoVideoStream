@@ -25,6 +25,7 @@
           <th (click)="variable.call = sortbyid(variable.call)">ID</th>
           <th (click)="variable.call = sortbyip(variable.call)">IP Address</th>
           <th (click)="variable.call = sortbyname(variable.call)">Name</th>
+          <th (click)="variable.call = sortbyactivity(variable.call)">Active</th>
           <th (click)="variable.call = sortbyonline(variable.call)">Online</th>
           <th></th>
         </tr>
@@ -39,6 +40,11 @@
             <td>
               <a class="cell_link" [routerLink]="['/devices/details', device.id]">
                 <span class="fas {{device.deviceStatus ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
+              </a>
+            </td>
+            <td>
+              <a class="cell_link" [routerLink]="['/devices/details', device.id]">
+                <span class="fas {{device.deviceStreamingStatus ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
               </a>
             </td>
             <td class="edit_td">

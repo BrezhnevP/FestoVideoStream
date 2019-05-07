@@ -11,6 +11,10 @@ export class DeviceListComponent {
   public devices: IDevice[];
 
   constructor(private dataService: DeviceDataService) {
+    this.refreshList();
+  }
+
+  getDevices() {
     this.dataService.getDevices().subscribe(result => {
       this.devices = result;
     }, error => console.error(error));
@@ -25,6 +29,11 @@ export class DeviceListComponent {
         }, error => console.error(error));
       });
     }
+  }
+
+  refreshList() {
+    this.devices = null;
+    this.getDevices();
   }
 
   getpagenumb(numb: number) {
@@ -65,6 +74,19 @@ export class DeviceListComponent {
       return call;
     }
   }
+
+  sortbyactivity(call: string) {
+    if (call !== 'activetop') {
+      this.devices = this.devices.sort((a, b) => a.deviceStatus > b.deviceStatus ? -1 : a.deviceStatus < b.deviceStatus ? 1 : 0);
+      call = 'activetop';
+      return call;
+    } else {
+      this.devices = this.devices.sort((a, b) => a.deviceStatus < b.deviceStatus ? -1 : a.deviceStatus > b.deviceStatus ? 1 : 0);
+      call = '';
+      return call;
+    }
+  }
+
   sortbyid(call: string) {
     if (call !== 'idtop') {
       this.devices = this.devices.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
