@@ -45,8 +45,7 @@ namespace FestoVideoStream.Entities
         /// <summary>
         /// The device's stream status.
         /// </summary>
-        [NotMapped]
-        public bool StreamingStatus { get; set; }
+        public bool StreamStatus { get; set; }
 
         public DateTime? LastStreamingDate { get; set; }
     }

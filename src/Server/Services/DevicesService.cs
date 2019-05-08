@@ -35,7 +35,7 @@ namespace FestoVideoStream.Services
                     Config = device.Config,
                     DeviceStatus = await this.GetDeviceStatus(device),
                     LastActivityDate = device.LastActivityDate,
-                    StreamingStatus = await this.GetDeviceStreamStatus(device),
+                    StreamStatus = await this.GetDeviceStreamStatus(device),
                     LastStreamingDate = device.LastStreamingDate
                 });
 
