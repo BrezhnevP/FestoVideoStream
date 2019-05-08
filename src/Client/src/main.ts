@@ -9,7 +9,7 @@ export function getBaseUrl() {
 }
 
 export function getApiUrl() {
-  const server = 'http://ctpo.sensorika.info:57264/';
+  const server = environment.API_URL;
   return server + 'api';
 }
 
