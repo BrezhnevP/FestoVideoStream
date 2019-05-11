@@ -10,7 +10,8 @@
       <button type="button" class="btn pagebtn btn-outline-info" *ngIf="variable.a > 0"
         (click)="variable.a = variable.a - variable.c;variable.b = variable.b - variable.c;variable.e = variable.e - 1 ">Prev</button>
     </div>
-    <button class="btn btn-primary" (click)=refreshList()><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
+    <button class="btn btn-primary" (click)=refreshList()><span class="glyphicon glyphicon-refresh"></span>
+      Refresh</button>
     <div class="btn-wrapper pages">
       <button type="button" class="btn pagebtn btn-outline-secondary next"
         (click)="variable.c = 15;variable.b = 15;variable.d = 15;variable.a = -1;variable.e = 1">15</button>
@@ -34,18 +35,25 @@
       <tbody>
         <ng-container *ngFor="let device of devices; let i = index">
           <tr *ngIf="i > variable.a && i < variable.b" ng-click="">
-            <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{i+1}}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{ device.id }}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{ device.ipAddress }}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/details', device.id]">{{ device.name }}</a></td>
-            <td>
-              <a class="cell_link" [routerLink]="['/devices/details', device.id]">
+            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{i+1}}</a></td>
+            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.id }}</a></td>
+            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.ipAddress }}</a></td>
+            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.name }}</a></td>
+            <td class="status">
+              <a class="cell_link" [routerLink]="['/devices/', device.id]">
                 <span class="fas {{device.deviceStatus ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
               </a>
             </td>
-            <td>
-              <a class="cell_link" [routerLink]="['/devices/details', device.id]">
+            <td class="status">
+              <a class="cell_link" [routerLink]="['/devices/', device.id]">
                 <span class="fas {{device.deviceStreamingStatus ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
+              </a>
+            </td>
+            <td>
+              <a class="cell_link" [routerLink]="['/devices/', device.id]">
+                From: {{ device.lastStreamStartDate }}
+                <br>
+                To: {{ device.lastStreamEndDate }}
               </a>
             </td>
             <td class="edit_td">

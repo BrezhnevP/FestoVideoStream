@@ -3,15 +3,17 @@ using System;
 using FestoVideoStream.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FestoVideoStream.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190509173233_StreamStatusIsMapped")]
+    partial class StreamStatusIsMapped
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,9 +33,7 @@ namespace FestoVideoStream.Migrations
 
                     b.Property<DateTime?>("LastActivityDate");
 
-                    b.Property<DateTime?>("LastStreamEndDate");
-
-                    b.Property<DateTime?>("LastStreamStartDate");
+                    b.Property<DateTime?>("LastStreamDate");
 
                     b.Property<string>("Name")
                         .IsRequired();

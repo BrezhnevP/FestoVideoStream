@@ -1,6 +1,7 @@
 ﻿using FestoVideoStream.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 
@@ -24,6 +25,8 @@ namespace FestoVideoStream.Controllers
         /// </summary>
         private readonly PathService pathService;
 
+        private readonly ILogger<StreamController> logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamController"/> class.
         /// </summary>
@@ -33,9 +36,10 @@ namespace FestoVideoStream.Controllers
         /// <param name="pathService">
         /// The path service.
         /// </param>
-        public StreamController(StreamService streamService, PathService pathService)
+        public StreamController(StreamService streamService, PathService pathService, ILogger<StreamController> logger)
         {
             this.pathService = pathService;
+            this.logger = logger;
             this.streamService = streamService;
         }
 
@@ -57,6 +61,7 @@ namespace FestoVideoStream.Controllers
             var manifestPath = this.pathService.GetDeviceDashManifest(id);
             if (!ConnectionService.UrlExistsAsync(manifestPath).Result)
             {
+                logger.LogWarning($"Cannot find MPEG-DASH manifest with id - {id}");
                 return NotFound();
             }
 
@@ -104,11 +109,11 @@ namespace FestoVideoStream.Controllers
         {
             return this.Ok(this.streamService.GetFilesUri(id, count));
             var result = this.CreateFrames(id, count);
-            return result == true 
-                       ? this.Ok(this.streamService.GetFilesUri(id, count)) 
-                       : result == false
-                           ? (IActionResult)this.BadRequest() 
-                           : this.NotFound();
+            return result == true ?
+                       this.Ok(this.streamService.GetFilesUri(id, count)) :
+                       result == false ?
+                           (IActionResult)this.BadRequest() :
+                           this.NotFound();
         }
 
         /// <summary>

@@ -9,20 +9,20 @@ namespace FestoVideoStream.Services
 {
     public class DevicesService
     {
-        private readonly AppDbContext context;
+        private readonly AppDbContext _context;
         private readonly PathService pathService;
 
         public DevicesService(AppDbContext context, PathService pathService)
         {
             this.pathService = pathService;
-            this.context = context;
+            this._context = context;
         }
 
-        public DbSet<Device> Devices => context.Devices;
+        public DbSet<Device> Devices => _context.Devices;
 
         public async Task<IQueryable<Device>> GetDevices(bool withStatus = true)
         {
-            var devices = context.Devices;
+            var devices = _context.Devices;
             
             if (withStatus)
             {
@@ -35,8 +35,9 @@ namespace FestoVideoStream.Services
                     Config = device.Config,
                     DeviceStatus = await this.GetDeviceStatus(device),
                     LastActivityDate = device.LastActivityDate,
-                    StreamStatus = await this.GetDeviceStreamStatus(device),
-                    LastStreamingDate = device.LastStreamingDate
+                    StreamStatus = device.StreamStatus,
+                    LastStreamStartDate = device.LastStreamStartDate,
+                    LastStreamEndDate= device.LastStreamEndDate
                 });
 
                 return Task.WhenAll(devicesWithStatus).Result.AsQueryable();
@@ -47,27 +48,26 @@ namespace FestoVideoStream.Services
 
         public async Task<Device> GetDevice(Guid id)
         {
-            var device = await this.context.Devices.SingleOrDefaultAsync(d => d.Id == id);
-            device.DeviceStatus = await this.GetDeviceStreamStatus(device.Id);
-            
+            var device = await this._context.Devices.SingleOrDefaultAsync(d => d.Id == id);
+
             return device;
         }
 
         public async Task<Device> CreateDevice(Device device)
         {
-            var insertedDevice = await this.context.Devices.AddAsync(device);
-            await this.context.SaveChangesAsync();
+            var insertedDevice = await this._context.Devices.AddAsync(device);
+            await this._context.SaveChangesAsync();
 
             return insertedDevice.Entity;
         }
 
         public async Task<Device> UpdateDevice(Guid id, Device device)
         {
-            this.context.Entry(device).State = EntityState.Modified;
+            this._context.Entry(device).State = EntityState.Modified;
 
             try
             {
-                await this.context.SaveChangesAsync();
+                await this._context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -88,35 +88,24 @@ namespace FestoVideoStream.Services
 
         public async Task<bool> DeleteDevice(Guid id)
         {
-            var device = await this.context.Devices.FindAsync(id);
+            var device = await this._context.Devices.FindAsync(id);
             if (device == null)
             {
                 return false;
             }
 
-            this.context.Devices.Remove(device);
-            await this.context.SaveChangesAsync();
+            this._context.Devices.Remove(device);
+            await this._context.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<bool> GetDeviceStreamStatus(Guid id) =>
-            await ConnectionService.UrlExistsAsync(this.pathService.GetDeviceDashManifest(id));
-
-        public async Task<bool> GetDeviceStreamStatus(Device device) =>
-            await this.GetDeviceStreamStatus(device.Id);
-
         public async Task<bool> GetDeviceStatus(Device device) =>
             await ConnectionService.DeviceAvailable(device.IpAddress);
 
-        public async Task SetDeviceStreamStatus(Device device)
-        {
-            device.DeviceStatus = await GetDeviceStreamStatus(device.Id);
-        }
-
         public async Task<bool> DeviceExists(Guid id)
         {
-            return await this.context.Devices.AnyAsync(e => e.Id == id);
+            return await this._context.Devices.AnyAsync(e => e.Id == id);
         }
 
         private string GetDefaultConfig(Guid id) =>

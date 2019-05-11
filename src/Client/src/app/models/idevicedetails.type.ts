@@ -5,6 +5,7 @@ export interface IDeviceDetails {
   config: string;
   deviceStatus: boolean;
   lastActivityDate: Date;
-  streamingStatus: boolean;
-  lastStreamingDate: Date;
+  streamStatus: boolean;
+  lastStreamStartDate: Date;
+  lastStreamEndDate: Date;
 }

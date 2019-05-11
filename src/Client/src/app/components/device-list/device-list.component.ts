@@ -51,7 +51,6 @@ export class DeviceListComponent {
       return call;
     }
   }
-
   sortbyip(call: string) {
     if (call !== 'iptop') {
       this.devices = this.devices.sort((a, b) => a.ipAddress < b.ipAddress ? -1 : a.ipAddress > b.ipAddress ? 1 : 0);
@@ -65,11 +64,11 @@ export class DeviceListComponent {
   }
   sortbyonline(call: string) {
     if (call !== 'onlinetop') {
-      this.devices = this.devices.sort((a, b) => a.streamingStatus > b.streamingStatus ? -1 : a.streamingStatus < b.streamingStatus ? 1 : 0);
+      this.devices = this.devices.sort((a, b) => a.streamStatus > b.streamStatus ? -1 : a.streamStatus < b.streamStatus ? 1 : 0);
       call = 'onlinetop';
       return call;
     } else {
-      this.devices = this.devices.sort((a, b) => a.streamingStatus < b.streamingStatus ? -1 : a.streamingStatus > b.streamingStatus ? 1 : 0);
+      this.devices = this.devices.sort((a, b) => a.streamStatus < b.streamStatus ? -1 : a.streamStatus > b.streamStatus ? 1 : 0);
       call = '';
       return call;
     }

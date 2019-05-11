@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FestoVideoStream.Controllers
 {
@@ -18,11 +20,13 @@ namespace FestoVideoStream.Controllers
 
         private readonly DevicesService devicesService;
         private readonly IMapper mapper;
+        private readonly ILogger<DevicesController> logger;
 
-        public DevicesController(DevicesService devicesService, IMapper mapper)
+        public DevicesController(DevicesService devicesService, IMapper mapper, ILogger<DevicesController> logger)
         {
             this.devicesService = devicesService;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         // GET: api/Devices
@@ -56,7 +60,6 @@ namespace FestoVideoStream.Controllers
         // GET: api/Devices/5
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDevice([FromRoute] Guid id)
         {
@@ -64,8 +67,10 @@ namespace FestoVideoStream.Controllers
 
             if (device == null)
             {
+                logger.LogWarning($"Cannot find device with id - {id}");
                 return NotFound();
             }
+            logger.LogInformation($"Getting device {id}");
 
             return Ok(device);
         }

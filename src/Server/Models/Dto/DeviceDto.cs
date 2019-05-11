@@ -14,8 +14,10 @@ namespace FestoVideoStream.Dto
 
         public DateTime? LastActivityDate { get; set; }
 
-        public bool StreamingStatus { get; set; }
+        public bool StreamStatus { get; set; }
 
-        public DateTime? LastStreamingDate { get; set; }
+        public DateTime? LastStreamStartDate { get; set; }
+
+        public DateTime? LastStreamEndDate { get; set; }
     }
 }
