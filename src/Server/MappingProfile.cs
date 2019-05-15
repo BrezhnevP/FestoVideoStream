@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using FestoVideoStream.Dto;
-using FestoVideoStream.Entities;
+using FestoVideoStream.Models.Dto;
+using FestoVideoStream.Models.Entities;
 
 namespace FestoVideoStream
 {

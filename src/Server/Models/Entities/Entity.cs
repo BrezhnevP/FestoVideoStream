@@ -3,26 +3,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FestoVideoStream.Models.Entities
 {
-    /// <summary>
-    /// The device.
-    /// </summary>
-    public class User
+    public class Entity
     {
         /// <summary>
-        /// The unique identifier.
+        /// Gets or sets the id.
         /// </summary>
         [Key]
         public Guid Id { get; set; }
 
         /// <summary>
-        /// The name.
+        /// When entity is created
         /// </summary>
-        [Key]
-        public string Login { get; set; }
+        public DateTime Created { get; set; }
 
         /// <summary>
-        /// The name.
+        /// Last moment when entity is updated
         /// </summary>
-        public string PasswordHash { get; set; }
+        public DateTime Modified { get; set; }
+
     }
 }

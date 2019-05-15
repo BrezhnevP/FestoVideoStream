@@ -1,5 +1,5 @@
 ﻿using FestoVideoStream.Data;
-using FestoVideoStream.Entities;
+using FestoVideoStream.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

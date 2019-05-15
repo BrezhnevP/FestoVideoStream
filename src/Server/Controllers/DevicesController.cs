@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using FestoVideoStream.Dto;
-using FestoVideoStream.Entities;
+using FestoVideoStream.Models.Dto;
+using FestoVideoStream.Models.Entities;
 using FestoVideoStream.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace FestoVideoStream.Controllers
 {

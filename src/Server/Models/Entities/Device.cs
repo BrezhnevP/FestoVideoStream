@@ -1,11 +1,10 @@
-﻿using FestoVideoStream.Attributes;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using FestoVideoStream.Attributes;
 
-namespace FestoVideoStream.Entities
+namespace FestoVideoStream.Models.Entities
 {
-    using System.ComponentModel.DataAnnotations.Schema;
-
     /// <summary>
     /// The device.
     /// </summary>

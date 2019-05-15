@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FestoVideoStream.Dto
+namespace FestoVideoStream.Models.Dto
 {
     public class DeviceDetailsDto
     {

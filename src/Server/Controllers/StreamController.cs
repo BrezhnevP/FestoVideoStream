@@ -27,20 +27,11 @@ namespace FestoVideoStream.Controllers
 
         private readonly ILogger<StreamController> logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StreamController"/> class.
-        /// </summary>
-        /// <param name="streamService">
-        /// The stream service.
-        /// </param>
-        /// <param name="pathService">
-        /// The path service.
-        /// </param>
         public StreamController(StreamService streamService, PathService pathService, ILogger<StreamController> logger)
         {
             this.pathService = pathService;
-            this.logger = logger;
             this.streamService = streamService;
+            this.logger = logger;
         }
 
         /// GET: api/stream/1/dash
@@ -137,8 +128,8 @@ namespace FestoVideoStream.Controllers
             }
 
             var processInfo = new ProcessStartInfo(
-                "sudo",
-                $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}");
+                "/bin/bash",
+                $"ffmpeg -y -i {rtmp} -frames:v {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}");
             using (var p = Process.Start(processInfo))
             {
                 if (p != null)
