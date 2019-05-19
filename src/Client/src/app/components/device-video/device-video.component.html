@@ -5,10 +5,12 @@
   <vg-controls>
     <vg-play-pause></vg-play-pause>
     <vg-time-display vgFor="streamVideo" [vgProperty]="'current'" [vgFormat]="'mm:ss'"></vg-time-display>
+    <vg-time-display vgFor="streamVideo" [vgProperty]="'left'" [vgFormat]="'mm:ss'"></vg-time-display>
+    <vg-time-display vgFor="streamVideo" [vgProperty]="'total'" [vgFormat]="'mm:ss'"></vg-time-display>
     <vg-fullscreen></vg-fullscreen>
   </vg-controls>
 
-  <video #media [vgMedia]="media" [vgDash]="currentStream" [vgHls]="currentStream" id="streamVideo" type="video/mp4"
-    crossorigin>
+  <video #media [vgMedia]="media" [vgDash]="currentStream" id="streamVideo" type="video/mp4" crossorigin>
   </video>
 </vg-player>
+<video data-dashjs-player src="{{currentStream}}"

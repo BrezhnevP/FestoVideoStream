@@ -1,6 +1,6 @@
-﻿using FestoVideoStream.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using FestoVideoStream.Models.Entities;
 
 namespace FestoVideoStream.Attributes
 {

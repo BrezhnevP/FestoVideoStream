@@ -1,9 +1,9 @@
 ﻿using FestoVideoStream.Data;
-using FestoVideoStream.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FestoVideoStream.Models.Entities;
 
 namespace FestoVideoStream.Services
 {

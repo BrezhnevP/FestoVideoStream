@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace FestoVideoStream.Entities
+namespace FestoVideoStream.Models.Entities
 {
     /// <summary>
     /// The device.

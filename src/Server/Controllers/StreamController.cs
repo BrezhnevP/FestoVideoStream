@@ -15,30 +15,16 @@ namespace FestoVideoStream.Controllers
     [ApiController]
     public class StreamController : ControllerBase
     {
-        /// <summary>
-        /// The stream service.
-        /// </summary>
         private readonly StreamService streamService;
-
-        /// <summary>
-        /// The path service.
-        /// </summary>
         private readonly PathService pathService;
+        private readonly DevicesService devicesService;
 
         private readonly ILogger<StreamController> logger;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StreamController"/> class.
-        /// </summary>
-        /// <param name="streamService">
-        /// The stream service.
-        /// </param>
-        /// <param name="pathService">
-        /// The path service.
-        /// </param>
-        public StreamController(StreamService streamService, PathService pathService, ILogger<StreamController> logger)
+        public StreamController(StreamService streamService, PathService pathService, DevicesService devicesService, ILogger<StreamController> logger)
         {
             this.pathService = pathService;
+            this.devicesService = devicesService;
             this.logger = logger;
             this.streamService = streamService;
         }
@@ -107,13 +93,13 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetFrames([FromRoute] Guid id, [FromRoute] int count)
         {
-            return this.Ok(this.streamService.GetFilesUri(id, count));
+            if (devicesService.GetDevice(id).Result.StreamStatus == false)
+                return NotFound();
+
             var result = this.CreateFrames(id, count);
             return result == true ?
-                       this.Ok(this.streamService.GetFilesUri(id, count)) :
-                       result == false ?
-                           (IActionResult)this.BadRequest() :
-                           this.NotFound();
+                       (IActionResult) Ok(this.streamService.GetFilesUri(id, count)) :
+                       BadRequest();
         }
 
         /// <summary>
@@ -128,23 +114,22 @@ namespace FestoVideoStream.Controllers
         /// <returns>
         /// The <see cref="IActionResult"/>.
         /// </returns>
-        private bool? CreateFrames(Guid id, int count)
+        private bool CreateFrames(Guid id, int count)
         {
             var rtmp = this.pathService.GetDeviceRtmpPath(id);
-            if (rtmp == null)
-            {
-                return null;
-            }
 
             var processInfo = new ProcessStartInfo(
-                "sudo",
-                $"ffmpeg -y -i {rtmp} -vframes {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}");
+                "/bin/bash",
+                $@"sudo ffmpeg -y -i {rtmp} -frames:v {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}.jpg");
             using (var p = Process.Start(processInfo))
             {
-                if (p != null)
+                try
                 {
-                    var strOutput = p.StandardOutput.ReadToEnd();
-                    p.WaitForExit();
+                    p?.WaitForExit();
+                }
+                catch (Exception e)
+                {
+                    return false;
                 }
             }
 
