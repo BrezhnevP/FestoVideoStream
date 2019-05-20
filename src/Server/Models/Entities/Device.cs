@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using FestoVideoStream.Attributes;
+using FestoVideoStream.Models.Enums;
 
 namespace FestoVideoStream.Models.Entities
 {
@@ -49,5 +50,10 @@ namespace FestoVideoStream.Models.Entities
         public DateTime? LastStreamStartDate { get; set; }
 
         public DateTime? LastStreamEndDate { get; set; }
+
+        /// <summary>
+        ///     Represents the methods which is used to check device online in network
+        /// </summary>
+        public ConnectionCheckType CheckType { get; set; }
     }
 }

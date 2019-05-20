@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using FestoVideoStream.Models.Entities;
+using FestoVideoStream.Models.Enums;
 
 namespace FestoVideoStream.Services
 {
@@ -100,8 +101,14 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        public async Task<bool> CheckDeviceStatus(Device device) =>
-            await ConnectionService.DeviceAvailable(device.IpAddress);
+        public async Task<bool> CheckDeviceStatus(Device device)
+        {
+            if (device.CheckType == ConnectionCheckType.Tcp)
+                return await ConnectionService.CheckByTcp(device.IpAddress);
+            else
+                return await ConnectionService.CheckByPing(device.IpAddress);
+        }
+            
 
         public async Task<bool> DeviceExists(Guid id)
         {

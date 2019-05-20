@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FestoVideoStream.Services
 {
@@ -26,7 +27,12 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        public static async Task<bool> DeviceAvailable(string ip)
+        public static async Task<bool> CheckByTcp(string ip)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static async Task<bool> CheckByPing(string ip)
         {
             if (ip == null)
                 return false;
