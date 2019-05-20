@@ -93,9 +93,13 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetFrames([FromRoute] Guid id, [FromRoute] int count)
         {
+            logger.LogTrace("Checking device stream status...");
             if (devicesService.GetDevice(id).Result.StreamStatus == false)
+            {
+                logger.LogInformation($"Stream {id} is offline");
                 return NotFound();
-
+            }
+            logger.LogTrace("Trying to create frames from stream");
             var result = this.CreateFrames(id, count);
             return result == true ?
                        (IActionResult) Ok(this.streamService.GetFilesUri(id, count)) :
@@ -117,23 +121,31 @@ namespace FestoVideoStream.Controllers
         private bool CreateFrames(Guid id, int count)
         {
             var rtmp = this.pathService.GetDeviceRtmpPath(id);
-
-            var processInfo = new ProcessStartInfo(
-                "/bin/bash",
-                $@"sudo ffmpeg -y -i {rtmp} -frames:v {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}.jpg");
+            this.logger.LogTrace($"Creating frames from {rtmp}");
+            var processInfo = new ProcessStartInfo
+            {
+                FileName = "/bin/bash",
+                Arguments = $"-c \" ffmpeg -y -i {rtmp} -frames:v {count} {this.pathService.FramesDirectory}/{StreamService.GetFramesFilePattern(id)}.jpg \"",
+                UseShellExecute = false,
+                RedirectStandardInput = true
+            };
             using (var p = Process.Start(processInfo))
             {
                 try
                 {
                     p?.WaitForExit();
+                    logger.LogTrace($"Frames created successfully");
                 }
                 catch (Exception e)
                 {
+                    logger.LogError($"Error while creating frames");
+
                     return false;
                 }
             }
 
             return true;
         }
+
     }
 }
