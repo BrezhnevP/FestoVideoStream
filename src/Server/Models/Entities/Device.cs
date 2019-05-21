@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Net;
 using FestoVideoStream.Attributes;
 using FestoVideoStream.Models.Enums;
+using Newtonsoft.Json;
 
 namespace FestoVideoStream.Models.Entities
 {
@@ -22,6 +24,11 @@ namespace FestoVideoStream.Models.Entities
         /// </summary>
         [Required, IpAddress]
         public string IpAddress { get; set; }
+
+        [Range(0, 65535)]
+        public int Port { get; set; }
+
+        public IPEndPoint IpEndPoint => new IPEndPoint(IPAddress.Parse(IpAddress), Port);
 
         /// <summary>
         /// Gets or sets the name.

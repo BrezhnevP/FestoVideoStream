@@ -104,7 +104,7 @@ namespace FestoVideoStream.Services
         public async Task<bool> CheckDeviceStatus(Device device)
         {
             if (device.CheckType == ConnectionCheckType.Tcp)
-                return await ConnectionService.CheckByTcp(device.IpAddress);
+                return await ConnectionService.CheckByTcp(device.IpEndPoint);
             else
                 return await ConnectionService.CheckByPing(device.IpAddress);
         }

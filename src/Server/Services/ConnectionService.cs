@@ -27,9 +27,14 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        public static async Task<bool> CheckByTcp(string ip)
+        public static async Task<bool> CheckByTcp(IPEndPoint endPoint)
         {
-            throw new NotImplementedException();
+            var tcpClient = new TcpClient();
+            await tcpClient.ConnectAsync(endPoint.Address, endPoint.Port);
+            var result = tcpClient.Connected;
+            tcpClient.Close();
+
+            return result;
         }
 
         public static async Task<bool> CheckByPing(string ip)
