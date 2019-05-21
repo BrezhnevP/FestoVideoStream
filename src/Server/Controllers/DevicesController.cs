@@ -69,7 +69,7 @@ namespace FestoVideoStream.Controllers
                 logger.LogWarning($"Cannot find device with id - {id}");
                 return NotFound();
             }
-            logger.LogInformation($"Getting device {id}");
+            logger.LogTrace($"Getting device {id}");
 
             return Ok(device);
         }

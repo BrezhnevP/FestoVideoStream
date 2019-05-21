@@ -21,16 +21,16 @@ namespace FestoVideoStream.Services
 
         #endregion
 
-        public static string GetFramesFilePattern(Guid id) => $"out_{id}_%03d.jpg";
+        public static string GetFramesFilePattern(Guid id) => $"out_{id}_%03d";
 
-        public static string GetFramesFileUriPattern(Guid id) => $"out_{id}_" + "{0}.jpg";
+        public static string GetFramesFileUriPattern(Guid id) => $"out_{id}_" + "{0}";
 
         #region Public methods
 
         public IEnumerable<Uri> GetFilesUri(Guid id, int count)
         {
             var pattern = GetFramesFileUriPattern(id);
-            var files = Enumerable.Range(1, count).Select(x => new Uri($"{this.pathService.FramesUrl}/{string.Format(pattern, x)}"));
+            var files = Enumerable.Range(1, count).Select(x => new Uri($"{this.pathService.FramesUrl}/{string.Format(pattern, x.ToString("D3"))}.jpg"));
 
             return files;
         }

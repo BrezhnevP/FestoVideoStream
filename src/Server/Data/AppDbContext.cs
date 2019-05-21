@@ -1,6 +1,6 @@
-﻿using FestoVideoStream.Models.Entities;
-using Microsoft.EntityFrameworkCore;
-using Device = FestoVideoStream.Models.Entities.Device;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using FestoVideoStream.Models.Entities;
 
 namespace FestoVideoStream.Data
 {

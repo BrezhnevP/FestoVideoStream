@@ -3,7 +3,6 @@ import { VgAPI } from 'videogular2/core';
 import { VgDASH } from 'videogular2/src/streaming/vg-dash/vg-dash';
 import { VgHLS } from 'videogular2/src/streaming/vg-hls/vg-hls';
 import { HttpClient } from '@angular/common/http';
-import { stripSummaryForJitNameSuffix } from '@angular/compiler/src/aot/util';
 
 export interface IMediaStream {
   type: 'dash';

@@ -1,9 +1,10 @@
 ﻿using FestoVideoStream.Data;
-using FestoVideoStream.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FestoVideoStream.Models.Entities;
+using FestoVideoStream.Models.Enums;
 
 namespace FestoVideoStream.Services
 {
@@ -33,7 +34,7 @@ namespace FestoVideoStream.Services
                     Name = device.Name,
                     IpAddress = device.IpAddress,
                     Config = device.Config,
-                    DeviceStatus = await this.GetDeviceStatus(device),
+                    DeviceStatus = await this.CheckDeviceStatus(device),
                     LastActivityDate = device.LastActivityDate,
                     StreamStatus = device.StreamStatus,
                     LastStreamStartDate = device.LastStreamStartDate,
@@ -100,8 +101,14 @@ namespace FestoVideoStream.Services
             return true;
         }
 
-        public async Task<bool> GetDeviceStatus(Device device) =>
-            await ConnectionService.DeviceAvailable(device.IpAddress);
+        public async Task<bool> CheckDeviceStatus(Device device)
+        {
+            if (device.CheckType == ConnectionCheckType.Tcp)
+                return await ConnectionService.CheckByTcp(device.IpAddress);
+            else
+                return await ConnectionService.CheckByPing(device.IpAddress);
+        }
+            
 
         public async Task<bool> DeviceExists(Guid id)
         {

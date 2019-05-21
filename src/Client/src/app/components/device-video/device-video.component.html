@@ -1,4 +1,4 @@
-<vg-player (onPlayerReady)="onPlayerReady($event)">
+<vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="currentStream">
   <vg-overlay-play></vg-overlay-play>
   <vg-buffering></vg-buffering>
 
@@ -8,7 +8,6 @@
     <vg-fullscreen></vg-fullscreen>
   </vg-controls>
 
-  <video #media [vgMedia]="media" [vgDash]="currentStream" [vgHls]="currentStream" id="streamVideo" type="video/mp4"
-    crossorigin>
+  <video #media [vgMedia]="media" [vgDash]="currentStream" id="streamVideo" type="video/mp4" crossorigin>
   </video>
 </vg-player>
