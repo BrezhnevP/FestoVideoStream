@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
+using Microsoft.AspNetCore.ResponseCaching.Internal;
 
 namespace FestoVideoStream.Controllers
 {
@@ -23,6 +24,7 @@ namespace FestoVideoStream.Controllers
 
         public StreamController(StreamService streamService, PathService pathService, DevicesService devicesService, ILogger<StreamController> logger)
         {
+            this.streamService = streamService;
             this.pathService = pathService;
             this.devicesService = devicesService;
             this.logger = logger;
@@ -96,7 +98,7 @@ namespace FestoVideoStream.Controllers
             if (devicesService.GetDevice(id).Result.StreamStatus == false)
             {
                 logger.LogInformation($"Stream {id} is offline");
-                return NotFound();
+                return NotFound(this.streamService.GetFilesUri(Guid.Empty, count));
             }
             logger.LogTrace("Trying to create frames from stream");
             var result = this.CreateFrames(id, count);
