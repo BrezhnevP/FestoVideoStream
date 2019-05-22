@@ -135,7 +135,7 @@ namespace FestoVideoStream.Controllers
                 try
                 {
                     p?.WaitForExit();
-                    logger.LogTrace($"Frames created successfully");
+                    logger.LogTrace($"{count} frames created successfully");
                 }
                 catch (Exception e)
                 {

@@ -37,7 +37,7 @@
           <tr *ngIf="i > variable.a && i < variable.b" ng-click="">
             <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{i+1}}</a></td>
             <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.id }}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.ipAddress }}</a></td>
+            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.ipAddress }}{{ device.port ? ':' : '' }}{{ device.port }}</a></td>
             <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.name }}</a></td>
             <td class="status">
               <a class="cell_link" [routerLink]="['/devices/', device.id]">

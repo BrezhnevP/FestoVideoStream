@@ -58,6 +58,8 @@ namespace FestoVideoStream.Models.Entities
 
         public DateTime? LastStreamEndDate { get; set; }
 
+        public DateTime? LastStreamStatusUpdate{ get; set; }
+
         /// <summary>
         ///     Represents the methods which is used to check device online in network
         /// </summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using FestoVideoStream.Models.Enums;
 
 namespace FestoVideoStream.Models.Dto
 {
@@ -9,6 +10,8 @@ namespace FestoVideoStream.Models.Dto
         public string Name { get; set; }
 
         public string IpAddress { get; set; }
+
+        public int Port { get; set; }
 
         public string Config { get; set; }
 
@@ -21,5 +24,7 @@ namespace FestoVideoStream.Models.Dto
         public DateTime? LastStreamStartDate { get; set; }
 
         public DateTime? LastStreamEndDate { get; set; }
+
+        public ConnectionCheckType CheckType { get; set; }
     }
 }
