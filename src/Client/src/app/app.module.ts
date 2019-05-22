@@ -51,8 +51,8 @@ import { DeviceDataService } from './services/device.service';
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'devices', component: DeviceListComponent },
-      { path: 'devices/:id', component: DeviceDetailsComponent },
-      { path: 'devices/add', component: AddDeviceComponent },
+      { path: 'device/:id', component: DeviceDetailsComponent },
+      { path: 'devices/add', component: AddDeviceComponent, pathMatch: 'full' },
       { path: 'devices/edit/:id', component: EditDeviceComponent },
     ])
   ],

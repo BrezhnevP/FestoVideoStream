@@ -25,7 +25,7 @@ export class AddDeviceComponent implements OnInit {
 
   onSubmit() {
     this.dataService.addDevice(this.addForm.value).subscribe(data => {
-      this.router.navigate(['devices']);
+      this.router.navigate(['/devices']);
     });
   }
 }

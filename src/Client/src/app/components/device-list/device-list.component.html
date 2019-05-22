@@ -35,29 +35,31 @@
       <tbody>
         <ng-container *ngFor="let device of devices; let i = index">
           <tr *ngIf="i > variable.a && i < variable.b" ng-click="">
-            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{i+1}}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.id }}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.ipAddress }}{{ device.port ? ':' : '' }}{{ device.port }}</a></td>
-            <td><a class="cell_link" [routerLink]="['/devices/', device.id]">{{ device.name }}</a></td>
+            <td><a class="cell_link" [routerLink]="['/device/', device.id]">{{i+1}}</a></td>
+            <td><a class="cell_link" [routerLink]="['/device/', device.id]">{{ device.id }}</a></td>
+            <td><a class="cell_link"
+                [routerLink]="['/device/', device.id]">{{ device.ipAddress }}{{ device.port ? ':' : '' }}{{ device.port }}</a>
+            </td>
+            <td><a class="cell_link" [routerLink]="['/device/', device.id]">{{ device.name }}</a></td>
             <td class="status">
-              <a class="cell_link" [routerLink]="['/devices/', device.id]">
+              <a class="cell_link" [routerLink]="['/device/', device.id]">
                 <span class="fas {{device.deviceStatus ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
               </a>
             </td>
             <td class="status">
-              <a class="cell_link" [routerLink]="['/devices/', device.id]">
+              <a class="cell_link" [routerLink]="['/device/', device.id]">
                 <span class="fas {{device.streamStatus ? 'fa-check-circle' : 'fa-times-circle'}}"></span>
               </a>
             </td>
             <td>
-              <a class="cell_link" [routerLink]="['/devices/', device.id]">
+              <a class="cell_link" [routerLink]="['/device/', device.id]">
                 From: {{ device.lastStreamStartDate }}
                 <br>
                 To: {{ device.lastStreamEndDate }}
               </a>
             </td>
             <td class="edit_td">
-              <a class="span_link" [routerLink]="['/devices/']" (click)="deleteDevice(device)"><button type="button"
+              <a class="span_link" [routerLink]="['/device/']" (click)="deleteDevice(device)"><button type="button"
                   class="btn btn-danger">Delete</button></a>
               <a class="span_link" [routerLink]="['/devices/edit', device.id]"><button type="button"
                   class="btn btn-success left_button">Edit</button></a>
