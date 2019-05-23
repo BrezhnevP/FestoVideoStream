@@ -43,12 +43,38 @@ namespace FestoVideoStream.Controllers
         [HttpGet("{id}/dash")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetManifestUrl([FromRoute] Guid id)
+        public IActionResult GetDashManifestUrl([FromRoute] Guid id)
         {
             var manifestPath = this.pathService.GetDeviceDashManifest(id);
             if (!ConnectionService.UrlExistsAsync(manifestPath).Result)
             {
                 logger.LogWarning($"Cannot find MPEG-DASH manifest with id - {id}");
+                return NotFound();
+            }
+
+            return Ok(manifestPath);
+        }
+
+
+        /// GET: api/stream/1/dash
+        /// <summary>
+        /// Get MPEG-DASH manifest url.
+        /// </summary>
+        /// <param name="id">
+        /// The id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IActionResult"/>.
+        /// </returns>
+        [HttpGet("{id}/hls")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetHlsManifestUrl([FromRoute] Guid id)
+        {
+            var manifestPath = this.pathService.GetDeviceDashManifest(id);
+            if (!ConnectionService.UrlExistsAsync(manifestPath).Result)
+            {
+                logger.LogWarning($"Cannot find HLS manifest with id - {id}");
                 return NotFound();
             }
 

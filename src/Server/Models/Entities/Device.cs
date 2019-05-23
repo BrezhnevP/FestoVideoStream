@@ -34,7 +34,7 @@ namespace FestoVideoStream.Models.Entities
         /// Gets or sets the name.
         /// </summary>
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; };
 
         /// <summary>
         /// Gets or sets the config.

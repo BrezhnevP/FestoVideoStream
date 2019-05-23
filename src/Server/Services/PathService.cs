@@ -8,6 +8,7 @@ namespace FestoVideoStream.Services
         #region Fields
 
         private static readonly Uri DashPath = new Uri("/dash", UriKind.Relative);
+        private static readonly Uri HlsPath = new Uri("/hls", UriKind.Relative);
         private static readonly Uri FramesPath = new Uri("/frames", UriKind.Relative);
 
         private readonly Uri rtmpServerPath;
@@ -32,6 +33,8 @@ namespace FestoVideoStream.Services
 
         public Uri DashUrl => new Uri(this.httpServerPath, DashPath);
 
+        public Uri HlsUrl => new Uri(this.httpServerPath, HlsPath);
+
         public Uri FramesUrl => new Uri(this.httpServerPath, FramesPath);
 
         public string FramesDirectory { get; }
@@ -43,6 +46,8 @@ namespace FestoVideoStream.Services
         public string GetDeviceRtmpPath(Guid id) => $"{this.RtmpUrl}/{id}";
 
         public string GetDeviceDashManifest(Guid id) => $"{this.DashUrl}/{id}.mpd";
+
+        public string GetDeviceHlsManifest(Guid id) => $"{this.DashUrl}/{id}.m3u8";
 
         #endregion
     }
