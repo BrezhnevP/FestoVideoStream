@@ -41,7 +41,6 @@ namespace FestoVideoStream.Services
             var response = await ping.SendPingAsync(endPoint.Address, 2000);
 
             return response.Status == IPStatus.Success;
-
         }
 
         public bool RtmpAvailable(string url)

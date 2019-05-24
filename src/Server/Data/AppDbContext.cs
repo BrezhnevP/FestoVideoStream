@@ -18,7 +18,6 @@ namespace FestoVideoStream.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasKey(user => new {user.Id, user.Login});
-            modelBuilder.Entity<User>().Property("Id").ValueGeneratedOnAdd();
         }
     }
 }
