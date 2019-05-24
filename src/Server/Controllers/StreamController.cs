@@ -71,7 +71,7 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetHlsManifestUrl([FromRoute] Guid id)
         {
-            var manifestPath = this.pathService.GetDeviceDashManifest(id);
+            var manifestPath = this.pathService.GetDeviceHlsManifest(id);
             if (!ConnectionService.UrlExistsAsync(manifestPath).Result)
             {
                 logger.LogWarning($"Cannot find HLS manifest with id - {id}");

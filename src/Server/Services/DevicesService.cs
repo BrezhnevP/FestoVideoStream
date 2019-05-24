@@ -65,7 +65,6 @@ namespace FestoVideoStream.Services
         public async Task<Device> UpdateDevice(Guid id, Device device)
         {
             this._context.Entry(device).State = EntityState.Modified;
-
             try
             {
                 await this._context.SaveChangesAsync();
@@ -104,9 +103,9 @@ namespace FestoVideoStream.Services
         public async Task<bool> CheckDeviceStatus(Device device)
         {
             if (device.CheckType == ConnectionCheckType.Tcp)
-                return await ConnectionService.CheckByTcp(device.IpEndPoint);
+                return await ConnectionService.CheckConnectionByTcp(device.IpEndPoint);
             else
-                return await ConnectionService.CheckByPing(device.IpAddress);
+                return await ConnectionService.CheckConnectionByPing(device.IpEndPoint);
         }
             
 

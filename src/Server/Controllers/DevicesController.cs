@@ -32,22 +32,9 @@ namespace FestoVideoStream.Controllers
         [HttpGet("{page?}/{sortBy?}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetDevices([FromQuery] int? page, [FromQuery] string sortBy)
+        public async Task<IActionResult> GetDevices([FromQuery] int? page)
         {
             var devices = await this.devicesService.GetDevices();
-            if (!string.IsNullOrWhiteSpace(sortBy))
-            {
-                switch (sortBy)
-                {
-                    case "IPAddress":
-                        devices = devices.OrderBy(d => d.IpAddress);
-                        break;
-
-                    case "Name":
-                        devices = devices.OrderBy(d => d.Name);
-                        break;
-                }
-            }
             if (page != null)
             {
                 devices = devices.Skip(((int)page - 1) * PageSize).Take(PageSize);
