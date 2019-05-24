@@ -20,41 +20,17 @@ namespace FestoVideoStream.Controllers
     [ApiController]
     public class AuthController : Controller
     {
-        /// <summary>
-        /// The service.
-        /// </summary>
-        private readonly UsersService service;
+        private readonly UsersService usersService;
 
-        /// <summary>
-        /// The mapper.
-        /// </summary>
         private readonly IMapper mapper;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AuthController"/> class.
-        /// </summary>
-        /// <param name="service">
-        /// The service.
-        /// </param>
-        /// <param name="mapper">
-        /// The mapper.
-        /// </param>
-        public AuthController(UsersService service, IMapper mapper)
+        public AuthController(UsersService usersService, IMapper mapper)
         {
-            this.service = service;
+            this.usersService = usersService;
             this.mapper = mapper;
         }
 
         /// POST: api/auth/login
-        /// <summary>
-        /// The login.
-        /// </summary>
-        /// <param name="user">
-        /// The user.
-        /// </param>
-        /// <returns>
-        /// The <see cref="IActionResult"/>.
-        /// </returns>
         [HttpPost, Route("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -66,7 +42,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest("Invalid client request");
             }
 
-            var identity = GetIdentity(user.Login, user.Password);
+            var identity = GetIdentity(user);
             if (identity == null)
             {
                 return Unauthorized("Invalid username or password.");
@@ -88,33 +64,18 @@ namespace FestoVideoStream.Controllers
             return Ok(new {Token = encodedToken});
         }
 
-        /// <summary>
-        /// The get identity.
-        /// </summary>
-        /// <param name="login">
-        /// The login.
-        /// </param>
-        /// <param name="password">
-        /// The password.
-        /// </param>
-        /// <returns>
-        /// The <see cref="ClaimsIdentity"/>.
-        /// </returns>
-        private ClaimsIdentity GetIdentity(string login, string password)
+        private ClaimsIdentity GetIdentity(UserDto user)
         {
-            var user = this.service.GetUser(login, password).Result;
-            if (user != null)
-            {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
-                };
-                ClaimsIdentity claimsIdentity =
-                    new ClaimsIdentity(claims, "Token");
-                return claimsIdentity;
-            }
+            if (!this.usersService.CheckUser(user.Login, user.Password))
+                return null;
 
-            return null;
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Login)
+            };
+            var claimsIdentity = new ClaimsIdentity(claims, "Token");
+
+            return claimsIdentity;
         }
     }
 }

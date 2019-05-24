@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FestoVideoStream.Models.Entities
 {
@@ -8,21 +9,18 @@ namespace FestoVideoStream.Models.Entities
     /// </summary>
     public class User
     {
-        /// <summary>
-        /// The unique identifier.
-        /// </summary>
         [Key]
         public Guid Id { get; set; }
 
-        /// <summary>
-        /// The name.
-        /// </summary>
         [Key]
         public string Login { get; set; }
 
         /// <summary>
-        /// The name.
+        ///     This property is used to map with UserDto.Password
         /// </summary>
+        [NotMapped]
+        public string Password { get; set; }
+
         public string PasswordHash { get; set; }
     }
 }
