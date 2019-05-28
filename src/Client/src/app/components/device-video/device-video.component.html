@@ -1,15 +1,3 @@
-<vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="currentStream">
-  <vg-overlay-play></vg-overlay-play>
-  <vg-buffering></vg-buffering>
-
-  <vg-controls>
-    <vg-play-pause></vg-play-pause>
-    <vg-time-display vgFor="streamVideo" [vgProperty]="'current'" [vgFormat]="'mm:ss'"></vg-time-display>
-    <vg-fullscreen></vg-fullscreen>
-  </vg-controls>
-
-  <video #media [vgMedia]="media" [vgDash]="currentStream" id="streamVideo" type="video/mp4" crossorigin>
-  </video>
-</vg-player>
-
-<video id="video"></video>
+<video-js *ngIf="source" id="my_video_1" class="vjs-default-skin vjs-4-3" controls preload="auto" width="100"
+  height="100">
+</video-js>
