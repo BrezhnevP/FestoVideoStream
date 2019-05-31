@@ -1,17 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-
-import { VgCoreModule } from 'videogular2/core';
-import { VgControlsModule } from 'videogular2/controls';
-import { VgOverlayPlayModule } from 'videogular2/overlay-play';
-import { VgBufferingModule } from 'videogular2/buffering';
-import { VgStreamingModule } from 'videogular2/streaming';
-
 import { AppComponent } from './components/app.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { HomeComponent } from './components/home/home.component';
@@ -22,7 +15,6 @@ import { AddDeviceComponent } from './components/add-device/add-device.component
 import { EditDeviceComponent } from './components/edit-device/edit-device.component';
 
 import { DeviceDataService } from './services/device.service';
-
 
 @NgModule({
   declarations: [
@@ -38,11 +30,6 @@ import { DeviceDataService } from './services/device.service';
   imports: [
     CommonModule,
     FormsModule,
-    VgCoreModule,
-    VgControlsModule,
-    VgOverlayPlayModule,
-    VgBufferingModule,
-    VgStreamingModule,
     ReactiveFormsModule,
 
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -57,6 +44,9 @@ import { DeviceDataService } from './services/device.service';
     ])
   ],
   providers: [DeviceDataService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ],
 })
 export class AppModule { }

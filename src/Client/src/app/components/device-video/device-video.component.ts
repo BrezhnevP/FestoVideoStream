@@ -1,58 +1,45 @@
-import { Component, OnInit, ViewChild, Input, Inject } from '@angular/core';
-import { VgAPI } from 'videogular2/core';
-import { VgDASH } from 'videogular2/src/streaming/vg-dash/vg-dash';
-import { VgHLS } from 'videogular2/src/streaming/vg-hls/vg-hls';
+import { Component, Input, Inject, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as HLS from 'hls.js';
 
-
-export interface IMediaStream {
-  type: 'dash';
-  source: string;
-  label: string;
-}
+declare var videojs: any;
 
 @Component({
   selector: 'app-device-video',
   templateUrl: './device-video.component.html',
   styleUrls: ['./device-video.component.css']
 })
-export class DeviceVideoComponent implements OnInit {
-  @ViewChild(VgDASH) vgDash: VgDASH;
-  @ViewChild(VgHLS) vgHls: VgHLS;
+export class DeviceVideoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() deviceId: string;
   streamUrl: string;
-  currentStream: string;
-  api: VgAPI;
+  source: string;
+  private player: any;
 
   constructor(private http: HttpClient, @Inject('API_URL') apiUrl: string) {
     this.streamUrl = apiUrl + '/stream/';
   }
 
-  onPlayerReady(api: VgAPI) {
-    this.api = api;
-  }
-
-  ngOnInit() {
-    this.http.get(this.streamUrl + this.deviceId + '/dash', { responseType: 'text' }).subscribe(result => {
-      this.currentStream = result;
+  ngOnInit(): void {
+    this.http.get(this.streamUrl + this.deviceId + '/hls', { responseType: 'text' }).subscribe(result => {
+      this.source = result;
     }, error => console.error(error));
-
-    var video = <HTMLVideoElement>document.getElementById('video');
-    if(hls.isSupported()) {
-      var hls = new HLS();
-      hls.loadSource(this.currentStream);
-      hls.attachMedia(video);
-      hls.on(hls.Events.MANIFEST_PARSED,function() {
-        video.play();
-    });
+    if (!this.source) {
+      this.source = 'http://ctpo.sensorika.info:8080/hls/11111111-1111-1111-1111-111111111111.m3u8';
+    }
   }
-    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = 'currentStream';
-      video.addEventListener('loadedmetadata',function() {
-        video.play();
-      });
+
+  ngAfterViewInit(): void {
+    this.player = videojs('my_video_1');
+    this.player.src({
+      'type': 'application/x-mpegURL',
+      'src': this.source
+    });
+    this.player.reloadSourceOnError();
+  }
+
+  ngOnDestroy() {
+    if (this.player) {
+      this.player.dispose();
     }
   }
 }
