@@ -47,7 +47,7 @@ namespace FestoVideoStream.Services
 
         public string GetDeviceDashManifest(Guid id) => $"{this.DashUrl}/{id}.mpd";
 
-        public string GetDeviceHlsManifest(Guid id) => $"{this.DashUrl}/{id}.m3u8";
+        public string GetDeviceHlsManifest(Guid id) => $"{this.HlsUrl}/{id}.m3u8";
 
         #endregion
     }
