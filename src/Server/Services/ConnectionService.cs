@@ -19,7 +19,7 @@ namespace FestoVideoStream.Services
             {
                 await GetHeadRequest(url).GetResponseAsync();
             }
-            catch
+            catch (Exception e)
             {
                 return false;
             }

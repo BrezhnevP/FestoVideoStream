@@ -72,6 +72,7 @@ namespace FestoVideoStream.Controllers
         public IActionResult GetHlsManifestUrl([FromRoute] Guid id)
         {
             var manifestPath = this.pathService.GetDeviceHlsManifest(id);
+            logger.LogInformation($"Checking manifest file existence at {manifestPath}");
             if (!ConnectionService.UrlExistsAsync(manifestPath).Result)
             {
                 logger.LogWarning($"Cannot find HLS manifest with id - {id}");
@@ -102,6 +103,7 @@ namespace FestoVideoStream.Controllers
         }
 
         /// GET: api/stream/1/frames/5
+        /// 
         /// <summary>
         /// Get frames from video stream.
         /// </summary>
@@ -120,13 +122,13 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetFrames([FromRoute] Guid id, [FromRoute] int count)
         {
-            logger.LogTrace("Checking device stream status...");
+            logger.LogInformation("Checking device stream status...");
             if (devicesService.GetDevice(id).Result.StreamStatus == false)
             {
-                logger.LogInformation($"Stream {id} is offline");
+                logger.LogWarning($"Stream {id} is offline");
                 return NotFound(this.streamService.GetFilesUri(Guid.Empty, count));
             }
-            logger.LogTrace("Trying to create frames from stream");
+            logger.LogInformation("Trying to create frames from stream");
             var result = this.CreateFrames(id, count);
             return result == true ?
                        (IActionResult) Ok(this.streamService.GetFilesUri(id, count)) :
@@ -148,7 +150,7 @@ namespace FestoVideoStream.Controllers
         private bool CreateFrames(Guid id, int count)
         {
             var rtmp = this.pathService.GetDeviceRtmpPath(id);
-            this.logger.LogTrace($"Creating frames from {rtmp}");
+            this.logger.LogInformation($"Creating frames from {rtmp}");
             var processInfo = new ProcessStartInfo
             {
                 FileName = "/bin/bash",
@@ -161,11 +163,11 @@ namespace FestoVideoStream.Controllers
                 try
                 {
                     p?.WaitForExit();
-                    logger.LogTrace($"{count} frames created successfully");
+                    logger.LogInformation($"{count} frames created successfully");
                 }
                 catch (Exception e)
                 {
-                    logger.LogError($"Error while creating frames");
+                    logger.LogInformation($"Error while creating frames");
 
                     return false;
                 }
