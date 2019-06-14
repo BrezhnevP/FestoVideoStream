@@ -1,6 +1,7 @@
 ﻿using FestoVideoStream.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FestoVideoStream.Models.Entities;
@@ -19,15 +20,13 @@ namespace FestoVideoStream.Services
             this._context = context;
         }
 
-        public DbSet<Device> Devices => _context.Devices;
+        private DbSet<Device> Devices => _context.Devices;
 
         public async Task<IQueryable<Device>> GetDevices(bool withStatus = true)
         {
-            var devices = _context.Devices;
-            
             if (withStatus)
             {
-                var devicesAsync = await devices.ToListAsync();
+                var devicesAsync = await Devices.ToListAsync();
                 var devicesWithStatus = devicesAsync.Select(async device => new Device
                 {
                     Id = device.Id,
@@ -44,19 +43,19 @@ namespace FestoVideoStream.Services
                 return Task.WhenAll(devicesWithStatus).Result.AsQueryable();
             }
 
-            return devices;
+            return Devices;
         }
 
         public async Task<Device> GetDevice(Guid id)
         {
-            var device = await this._context.Devices.SingleOrDefaultAsync(d => d.Id == id);
+            var device = await Devices.SingleOrDefaultAsync(d => d.Id == id);
 
             return device;
         }
 
         public async Task<Device> CreateDevice(Device device)
         {
-            var insertedDevice = await this._context.Devices.AddAsync(device);
+            var insertedDevice = await Devices.AddAsync(device);
             await this._context.SaveChangesAsync();
 
             return insertedDevice.Entity;
@@ -86,15 +85,32 @@ namespace FestoVideoStream.Services
 
         public async Task<Device> UpdateDevice(Device device) => await this.UpdateDevice(device.Id, device);
 
+        public async Task UpdateDevices(IEnumerable<Device> devices)
+        {
+            foreach (var device in devices)
+            {
+                this._context.Entry(device).State = EntityState.Modified;
+            }
+
+            try
+            {
+                await this._context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return;
+            }
+        }
+
         public async Task<bool> DeleteDevice(Guid id)
         {
-            var device = await this._context.Devices.FindAsync(id);
+            var device = await Devices.FindAsync(id);
             if (device == null)
             {
                 return false;
             }
 
-            this._context.Devices.Remove(device);
+            Devices.Remove(device);
             await this._context.SaveChangesAsync();
 
             return true;

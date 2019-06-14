@@ -86,10 +86,10 @@ namespace FestoVideoStream.Controllers
                     }
                     device.LastStreamStatusUpdate = DateTime.UtcNow;
 
-                    logger.LogTrace(
+                    logger.LogInformation(
                         $"Updating device ({id}) with stream status - {(currentStreamStatus ? "online" : "offline")}");
                     if (await _devicesService.UpdateDevice(device) != null)
-                        logger.LogTrace($"Device ({id}) is updated");
+                        logger.LogInformation($"Device ({id}) is updated");
                 }
             }
             else

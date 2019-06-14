@@ -7,9 +7,10 @@ namespace FestoVideoStream.Services
     {
         #region Fields
 
-        private static readonly Uri DashPath = new Uri("/dash", UriKind.Relative);
-        private static readonly Uri HlsPath = new Uri("/hls", UriKind.Relative);
-        private static readonly Uri FramesPath = new Uri("/frames", UriKind.Relative);
+        private static readonly Uri VideoPath = new Uri("/video", UriKind.Relative);
+        private static readonly Uri DashPath = new Uri($"{VideoPath}/dash", UriKind.Relative);
+        private static readonly Uri HlsPath = new Uri($"{VideoPath}/hls", UriKind.Relative);
+        private static readonly Uri FramesPath = new Uri($"{VideoPath}/frames", UriKind.Relative);
 
         private readonly Uri rtmpServerPath;
         private readonly Uri httpServerPath;
