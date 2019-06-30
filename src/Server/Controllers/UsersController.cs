@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FestoVideoStream.Extensions;
 using FestoVideoStream.Models.Dto;
 using FestoVideoStream.Models.Entities;
 
@@ -25,11 +26,6 @@ namespace FestoVideoStream.Controllers
         private readonly UsersService usersService;
 
         /// <summary>
-        /// The mapper.
-        /// </summary>
-        private readonly IMapper mapper;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="UsersController"/> class.
         /// </summary>
         /// <param name="usersService">
@@ -38,10 +34,9 @@ namespace FestoVideoStream.Controllers
         /// <param name="mapper">
         /// The mapper.
         /// </param>
-        public UsersController(UsersService usersService, IMapper mapper)
+        public UsersController(UsersService usersService)
         {
             this.usersService = usersService;
-            this.mapper = mapper;
         }
 
         /// GET: api/users
@@ -62,7 +57,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var users = this.usersService.GetUsers().Select(d => this.mapper.Map<UserDto>(d));
+            var users = this.usersService.GetUsers().Select(u => u.ToDto());
 
             return Ok(users);
         }
@@ -89,14 +84,14 @@ namespace FestoVideoStream.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = this.mapper.Map<UserDto>(await this.usersService.GetUser(id));
+            var user = await this.usersService.GetUser(id);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(user);
+            return Ok(user.ToDto());
         }
 
         /// PATCH: api/Users/5
@@ -128,7 +123,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var result = await this.usersService.UpdateUser(id, this.mapper.Map<User>(user));
+            var result = await this.usersService.UpdateUser(id, user.ToEntity());
 
             if (result == null)
             {
@@ -157,7 +152,7 @@ namespace FestoVideoStream.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var createdUser = await this.usersService.CreateUser(this.mapper.Map<User>(userToCreate));
+            var createdUser = await this.usersService.CreateUser(userToCreate.ToEntity());
 
             return CreatedAtAction("GetUser", new { createdUser.Id }, createdUser);
         }

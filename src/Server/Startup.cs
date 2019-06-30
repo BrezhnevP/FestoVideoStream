@@ -42,13 +42,9 @@ namespace FestoVideoStream
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        // укзывает, будет ли валидироваться издатель при валидации токена
                         ValidateIssuer = false,
-                        // будет ли валидироваться потребитель токена
                         ValidateAudience = false,
-                        // установка ключа безопасности
                         IssuerSigningKey = AuthOptions.SymmetricSecurityKey,
-                        // валидация ключа безопасности
                         ValidateIssuerSigningKey = true,
                     };
                 });
@@ -68,12 +64,9 @@ namespace FestoVideoStream
             services.AddCors();
 
             // Auto Mapper Configurations
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new MappingProfile());
+            Mapper.Initialize(cfg => {
+                cfg.AddProfile<MappingProfile>();
             });
-            var mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

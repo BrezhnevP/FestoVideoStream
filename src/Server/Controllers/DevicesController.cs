@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FestoVideoStream.Extensions;
 
 namespace FestoVideoStream.Controllers
 {
@@ -18,13 +19,11 @@ namespace FestoVideoStream.Controllers
         private const int PageSize = 5;
 
         private readonly DevicesService devicesService;
-        private readonly IMapper mapper;
         private readonly ILogger<DevicesController> logger;
 
-        public DevicesController(DevicesService devicesService, IMapper mapper, ILogger<DevicesController> logger)
+        public DevicesController(DevicesService devicesService, ILogger<DevicesController> logger)
         {
             this.devicesService = devicesService;
-            this.mapper = mapper;
             this.logger = logger;
         }
 
@@ -40,7 +39,7 @@ namespace FestoVideoStream.Controllers
                 devices = devices.Skip(((int)page - 1) * PageSize).Take(PageSize);
             }
 
-            return Ok(devices.Select(d => this.mapper.Map<DeviceDto>(d)));
+            return Ok(devices.Select(d => d.ToDto()));
         }
 
         // GET: api/Devices/5
@@ -49,7 +48,7 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetDevice([FromRoute] Guid id)
         {
-            var device = this.mapper.Map<DeviceDetailsDto>(await this.devicesService.GetDevice(id));
+            var device = await this.devicesService.GetDevice(id);
 
             if (device == null)
             {
@@ -58,7 +57,7 @@ namespace FestoVideoStream.Controllers
             }
             logger.LogTrace($"Getting device {id}");
 
-            return Ok(device);
+            return Ok(device.ToDetailsDto());
         }
 
         // PUT: api/Devices/5
@@ -72,7 +71,7 @@ namespace FestoVideoStream.Controllers
                 return BadRequest();
             }
 
-            var device = this.mapper.Map<Device>(deviceDetailsDto);
+            var device = deviceDetailsDto.ToEntity();
             if (!TryValidateModel(device))
             {
                 return BadRequest();
@@ -92,7 +91,7 @@ namespace FestoVideoStream.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostDevice([FromBody] DeviceDetailsDto deviceToCreate)
         {
-            var device = this.mapper.Map<Device>(deviceToCreate);
+            var device = deviceToCreate.ToEntity();
             if (!TryValidateModel(device))
             {
                 return BadRequest();
